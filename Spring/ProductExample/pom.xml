@@ -1,9 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+    Project Object Model (POM) file for Maven build system
+    This file defines project configuration, dependencies, and build settings
+-->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     
+    <!-- 
+        Inherits from Spring Boot parent POM
+        Provides dependency management and default configurations
+        Version 3.2.3 is the latest stable Spring Boot version
+    -->
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -11,35 +20,43 @@
         <relativePath/>
     </parent>
     
+    <!-- Project coordinates and metadata -->
     <groupId>com.example</groupId>
     <artifactId>product-example</artifactId>
     <version>1.0.0</version>
     <name>Product Example</name>
     <description>Spring Boot Product Management Example</description>
     
+    <!-- Project properties -->
     <properties>
         <java.version>17</java.version>
     </properties>
     
+    <!-- Project dependencies -->
     <dependencies>
+        <!-- Spring Boot Web: Provides web application capabilities -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+        <!-- Spring Data JPA: Provides database access and ORM capabilities -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
+        <!-- H2 Database: In-memory database for development -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <scope>runtime</scope>
         </dependency>
+        <!-- Lombok: Reduces boilerplate code -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
+        <!-- Spring Boot Test: Testing framework -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -47,13 +64,16 @@
         </dependency>
     </dependencies>
     
+    <!-- Build configuration -->
     <build>
         <plugins>
+            <!-- Spring Boot Maven Plugin: Enables building executable JAR -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <excludes>
+                        <!-- Excludes Lombok from the final build -->
                         <exclude>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
