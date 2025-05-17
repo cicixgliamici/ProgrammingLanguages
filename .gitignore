@@ -1,0 +1,31 @@
+# Scala build files
+.metals/
+.scala-build/
+target/
+project/target/
+project/project/
+project/.bloop/
+project/.metals/
+project/.ammonite/
+project/.scala/
+project/.sbt/
+project/.idea/
+project/.vscode/
+
+# IDE files
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+.classpath
+.project
+.settings/
+
+# OS specific files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/ 
