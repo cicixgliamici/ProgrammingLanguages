@@ -1,88 +1,184 @@
 """
-Error handling and file operations in Python.
+Error Handling & File Operations in Python (try/except + files + JSON).
 
 Educational goals:
 1) Understand try/except/else/finally flow.
-2) Create and raise a custom exception type.
-3) Use context managers (with open) for safe file handling.
-4) Read/write JSON as a practical persistence format.
+2) Create and raise custom exception types (domain + I/O layer).
+3) Use context managers for safe file handling.
+4) Read/write JSON with practical, defensive patterns.
+
+This file is runnable: execute it to see the demos.
 """
 
-import json
-from pathlib import Path
+from __future__ import annotations
 
+import json
+from dataclasses import asdict, dataclass
+from pathlib import Path
+from typing import Any
+
+
+# =============================================================================
+# 1) Custom exceptions (domain vs infrastructure)
+# =============================================================================
 
 class InvalidScoreError(Exception):
-    """
-    Custom exception for domain-specific validation errors.
+    """Raised when a score is outside the allowed range [0, 100]."""
 
-    Why custom exceptions?
-    - They make intent clearer than generic ValueError in bigger projects.
-    - Callers can catch specific failures and react precisely.
+
+class PersistenceError(Exception):
+    """
+    Raised when saving/loading fails for I/O or serialization reasons.
+    Useful to "wrap" low-level exceptions with a higher-level message.
     """
 
+
+# =============================================================================
+# 2) Domain logic with validation
+# =============================================================================
 
 def normalize_score(score: int) -> float:
     """
     Convert a score from range 0..100 to range 0..1.
 
-    Example:
-    - 75 becomes 0.75
+    Examples:
+    - 75 -> 0.75
+    - 0  -> 0.0
+    - 100 -> 1.0
     """
-    # Validation step before conversion.
     if not 0 <= score <= 100:
-        raise InvalidScoreError("Score must be between 0 and 100")
-    return score / 100
+        raise InvalidScoreError(f"Score must be between 0 and 100 (got {score})")
+    return score / 100.0
 
 
-def save_results(path: Path, data: dict) -> None:
-    """Save dictionary data as pretty-printed JSON on disk."""
-    # 'with open(...)' guarantees file closing even if exceptions occur.
-    with open(path, "w", encoding="utf-8") as file:
-        json.dump(data, file, indent=2)
+def normalize_scores(scores: list[int]) -> list[float]:
+    """Normalize a list of scores. Stops at first invalid score (by design)."""
+    return [normalize_score(s) for s in scores]
 
 
-def load_results(path: Path) -> dict:
-    """Load dictionary data from a JSON file."""
-    with open(path, "r", encoding="utf-8") as file:
-        return json.load(file)
+# =============================================================================
+# 3) JSON persistence helpers (Path + defensive handling)
+# =============================================================================
 
+def save_json(path: Path, data: Any) -> None:
+    """
+    Save 'data' as JSON.
 
-if __name__ == "__main__":
-    # Use Path to keep filesystem operations explicit and cross-platform.
-    output_path = Path("Python/results.json")
-
-    # ------------------------------------------------------------
-    # try/except/else/finally demonstration
-    # ------------------------------------------------------------
+    Defensive steps:
+    - Create parent directories automatically.
+    - Use UTF-8 explicitly.
+    - Raise a clean, repo-friendly error on failure.
+    """
     try:
-        # Intentional invalid value (120) to show exception flow.
-        raw_scores = [78, 99, 120]
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with path.open("w", encoding="utf-8") as f:
+            json.dump(data, f, indent=2, ensure_ascii=False)
+    except (OSError, TypeError) as e:
+        # OSError covers PermissionError, FileNotFoundError (in some cases), etc.
+        # TypeError happens if 'data' contains non-JSON-serializable objects.
+        raise PersistenceError(f"Failed to save JSON to {path}") from e
 
-        # If any score is invalid, normalize_score raises InvalidScoreError
-        # and list creation stops immediately.
-        normalized = [normalize_score(score) for score in raw_scores]
 
-    except InvalidScoreError as error:
-        # Executed when our custom validation fails.
-        print(f"Input error: {error}")
+def load_json(path: Path) -> Any:
+    """
+    Load JSON data from 'path'.
+
+    Defensive steps:
+    - Provide clear errors for missing files and malformed JSON.
+    """
+    try:
+        with path.open("r", encoding="utf-8") as f:
+            return json.load(f)
+    except FileNotFoundError as e:
+        raise PersistenceError(f"File not found: {path}") from e
+    except json.JSONDecodeError as e:
+        raise PersistenceError(f"Invalid JSON format in file: {path}") from e
+    except OSError as e:
+        raise PersistenceError(f"Failed to read from {path}") from e
+
+
+# =============================================================================
+# 4) A small dataclass example (nice for structured payloads)
+# =============================================================================
+
+@dataclass(slots=True)
+class ResultsPayload:
+    normalized_scores: list[float]
+
+    def to_json(self) -> dict[str, Any]:
+        # asdict converts dataclass -> plain dict (JSON-friendly)
+        return asdict(self)
+
+
+# =============================================================================
+# 5) try/except/else/finally flow demonstration
+# =============================================================================
+
+def demo_try_except_flow(raw_scores: list[int]) -> list[float]:
+    """
+    Show try/except/else/finally semantics.
+
+    - try: code that might fail
+    - except: runs only on exceptions
+    - else: runs only if try succeeded
+    - finally: always runs
+    """
+    normalized: list[float]
+
+    try:
+        normalized = normalize_scores(raw_scores)
+
+    except InvalidScoreError as err:
+        print(f"Input error: {err}")
         normalized = []
 
     else:
-        # Executed only if NO exception happened in try block.
         print("All scores normalized successfully")
 
     finally:
-        # Always executed (success or failure).
-        # Good place for cleanup/logging in larger applications.
         print("Validation step completed")
 
-    # ------------------------------------------------------------
-    # File persistence demonstration
-    # ------------------------------------------------------------
-    payload = {"normalized_scores": normalized}
-    save_results(output_path, payload)
-    print(f"Saved results to {output_path}")
+    return normalized
 
-    loaded = load_results(output_path)
-    print(f"Loaded payload: {loaded}")
+
+# =============================================================================
+# 6) Gotchas / quick notes
+# =============================================================================
+"""
+Common gotchas:
+- Catch only what you can handle. Avoid bare `except:` in educational code.
+- Use exception chaining: `raise X(...) from e` preserves the root cause.
+- Use Path(...) + .open() instead of raw open("...") for clarity and portability.
+- Always specify encoding when dealing with text files.
+- JSON can only represent basic types (dict, list, str, int, float, bool, None).
+"""
+
+
+# =============================================================================
+# Main demo
+# =============================================================================
+
+def main() -> None:
+    output_path = Path("Python/results.json")
+
+    # 1) try/except/else/finally demo
+    raw_scores = [78, 99, 120]  # 120 is invalid on purpose
+    normalized = demo_try_except_flow(raw_scores)
+
+    # 2) persistence demo
+    payload = ResultsPayload(normalized_scores=normalized)
+
+    try:
+        save_json(output_path, payload.to_json())
+        print(f"Saved results to {output_path}")
+
+        loaded = load_json(output_path)
+        print(f"Loaded payload: {loaded}")
+
+    except PersistenceError as e:
+        # In real apps, you might log and exit with a non-zero status.
+        print(f"Persistence error: {e}")
+
+
+if __name__ == "__main__":
+    main()
