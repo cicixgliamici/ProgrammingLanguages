@@ -1,5 +1,5 @@
 /-
-CustomInductiveTypes.lean
+008_CustomInductiveTypes.lean
 
 Goal:
 - define your own inductive types
