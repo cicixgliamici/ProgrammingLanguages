@@ -1,5 +1,5 @@
 /-
-Propositions.lean
+001_Propositions.lean
 
 Goal:
 - understand that propositions are types
