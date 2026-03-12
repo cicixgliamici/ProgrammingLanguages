@@ -1,5 +1,5 @@
 /-
-LogicExercises.lean
+007_LogicExercises.lean
 
 Goal:
 - practice basic propositional logic in Lean
