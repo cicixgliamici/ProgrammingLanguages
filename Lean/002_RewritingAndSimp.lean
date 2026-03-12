@@ -1,5 +1,5 @@
 /-
-RewritingAndSimp.lean
+002_RewritingAndSimp.lean
 
 Goal:
 - use equality hypotheses
