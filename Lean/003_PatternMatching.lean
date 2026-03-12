@@ -1,5 +1,5 @@
 /-
-PatternMatching.lean
+003_PatternMatching.lean
 
 Goal:
 - understand match
