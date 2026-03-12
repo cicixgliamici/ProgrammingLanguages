@@ -1,5 +1,5 @@
 /-
-Solved exercises for LogicExercises.lean
+007a_Solved exercises for LogicExercises.lean
 -/
 
 variable (p q r : Prop)
