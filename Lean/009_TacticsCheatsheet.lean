@@ -1,5 +1,5 @@
 /-
-TacticsCheatsheet.lean
+009_TTacticsCheatsheet.lean
 
 Goal:
 - collect the most common beginner tactics
