@@ -1,5 +1,5 @@
 /-
-Lists.lean
+006_Lists.lean
 
 Goal:
 - understand Lean lists
