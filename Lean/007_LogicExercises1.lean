@@ -1,82 +1,70 @@
 /-
-007_LogicExercises.lean
+007_LogicExercises1.lean
 
-Goal:
-- practice basic propositional logic in Lean
-- use intro, exact, apply, constructor, left, right
+Goals:
+- read implications as functions between proofs;
+- construct and eliminate conjunctions and disjunctions;
+- understand negation as `p → False`.
 -/
 
 variable (p q r : Prop)
 
--- Identity
 example : p → p := by
   intro hp
   exact hp
 
--- Keep the first hypothesis
-example : p → q → p := by
-  intro hp
-  intro hq
-  exact hp
-
--- Compose implications
+-- Applying `hpq` produces a proof of `q`; applying `hqr` then produces `r`.
 example : (p → q) → (q → r) → p → r := by
-  intro hpq
-  intro hqr
-  intro hp
+  intro hpq hqr hp
   exact hqr (hpq hp)
 
--- Build a conjunction
 example : p → q → p ∧ q := by
-  intro hp
-  intro hq
+  intro hp hq
   constructor
   · exact hp
   · exact hq
 
--- Extract the left part of a conjunction
 example : p ∧ q → p := by
   intro hpq
   exact hpq.left
 
--- Extract the right part of a conjunction
-example : p ∧ q → q := by
-  intro hpq
-  exact hpq.right
-
--- Build a disjunction: left case
 example : p → p ∨ q := by
   intro hp
   left
   exact hp
 
--- Build a disjunction: right case
-example : q → p ∨ q := by
-  intro hq
-  right
-  exact hq
-
--- Use a disjunction by case analysis
+/- To consume a disjunction, both possible constructors must be considered.
+   Each branch receives the proof stored by that constructor. -/
 example : (p → r) → (q → r) → p ∨ q → r := by
-  intro hpr
-  intro hqr
+  intro hpr hqr hpq
+  cases hpq with
+  | inl hp => exact hpr hp
+  | inr hq => exact hqr hq
+
+/- Solved exercises -/
+
+theorem and_comm_from_proofs : (p ∧ q) → (q ∧ p) := by
+  intro hpq
+  exact ⟨hpq.right, hpq.left⟩
+
+theorem or_comm_from_cases : (p ∨ q) → (q ∨ p) := by
   intro hpq
   cases hpq with
-  | inl hp =>
-      exact hpr hp
-  | inr hq =>
-      exact hqr hq
+  | inl hp => exact Or.inr hp
+  | inr hq => exact Or.inl hq
 
--- Negation is a function to False
-example : (p → False) → p → False := by
-  intro hnp
-  intro hp
-  exact hnp hp
+-- This is contraposition: assuming `p` would produce the forbidden proof of `q`.
+theorem contrapositive : (p → q) → (¬q → ¬p) := by
+  intro hpq hnq hp
+  exact hnq (hpq hp)
 
-/-
-Exercises:
-1. Prove: (p ∧ q) → (q ∧ p)
-2. Prove: (p ∨ q) → (q ∨ p)
-3. Prove: (p → q) → (¬ q → ¬ p)
-4. Prove: p ∧ (q ∧ r) → (p ∧ q) ∧ r
+theorem and_assoc_forward : p ∧ (q ∧ r) → (p ∧ q) ∧ r := by
+  intro h
+  exact ⟨⟨h.left, h.right.left⟩, h.right.right⟩
+
+/- Study notes:
+- `intro` moves the input of an implication into the local context.
+- `constructor` splits a conjunction goal; `cases` eliminates a disjunction.
+- `⟨a, b⟩` is compact term syntax for constructing a pair or conjunction.
+- Lean's core logic is constructive: a proposition is proved by building a value.
 -/

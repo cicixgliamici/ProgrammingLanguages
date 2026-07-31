@@ -40,6 +40,7 @@ The repository is organized by language, with each language area potentially con
 - [Scala](./Scala/)
 - [Python](./Python/)
 - [Lean4](./Lean/)
+- [Coq / Rocq](./Coq/)
 - [SpringBoot](./Spring/)
 
 As the repository evolves, more language sections can be added in the same spirit.

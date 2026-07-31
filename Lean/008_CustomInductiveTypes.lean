@@ -1,85 +1,83 @@
 /-
 008_CustomInductiveTypes.lean
 
-Goal:
-- define your own inductive types
-- write functions by pattern matching
-- reason by cases
+Goals:
+- define algebraic data types with `inductive`;
+- use constructors and exhaustive pattern matching;
+- recurse over a custom tree.
 -/
 
--- A custom type for weekdays
 inductive Day where
-  | monday
-  | tuesday
-  | wednesday
-  | thursday
-  | friday
-  | saturday
-  | sunday
+  | monday | tuesday | wednesday | thursday | friday | saturday | sunday
 deriving Repr, DecidableEq
 
--- Return true if the day is a weekend day
 def isWeekend : Day → Bool
-  | Day.saturday => true
-  | Day.sunday => true
+  | .saturday | .sunday => true
   | _ => false
 
-#eval isWeekend Day.monday
-#eval isWeekend Day.sunday
-
--- Return the next day
 def nextDay : Day → Day
-  | Day.monday => Day.tuesday
-  | Day.tuesday => Day.wednesday
-  | Day.wednesday => Day.thursday
-  | Day.thursday => Day.friday
-  | Day.friday => Day.saturday
-  | Day.saturday => Day.sunday
-  | Day.sunday => Day.monday
+  | .monday => .tuesday
+  | .tuesday => .wednesday
+  | .wednesday => .thursday
+  | .thursday => .friday
+  | .friday => .saturday
+  | .saturday => .sunday
+  | .sunday => .monday
 
-#eval nextDay Day.friday
-#eval nextDay Day.sunday
-
--- A custom option-like type
+/- `MyOption α` contains either no value or one value of type `α`.
+   The parameter makes one reusable type family instead of many concrete types. -/
 inductive MyOption (α : Type) where
-  | none : MyOption α
-  | some : α → MyOption α
+  | none
+  | some (value : α)
 deriving Repr
 
--- Extract a value with a default
-def getOrElse (default : α) : MyOption α → α
-  | MyOption.none => default
-  | MyOption.some x => x
+def getOrElse {α : Type} (default : α) : MyOption α → α
+  | .none => default
+  | .some value => value
 
-#eval getOrElse 0 (MyOption.some 10)
-#eval getOrElse 0 (MyOption.none)
-
--- A custom binary tree
 inductive MyTree (α : Type) where
-  | leaf : α → MyTree α
-  | node : MyTree α → MyTree α → MyTree α
+  | leaf (value : α)
+  | node (left right : MyTree α)
 deriving Repr
 
--- Count the number of leaves
-def countLeaves : MyTree α → Nat
-  | MyTree.leaf _ => 1
-  | MyTree.node l r => countLeaves l + countLeaves r
+def countLeaves {α : Type} : MyTree α → Nat
+  | .leaf _ => 1
+  | .node left right => countLeaves left + countLeaves right
 
 def exampleTree : MyTree Nat :=
-  MyTree.node
-    (MyTree.leaf 1)
-    (MyTree.node (MyTree.leaf 2) (MyTree.leaf 3))
+  .node (.leaf 1) (.node (.leaf 2) (.leaf 3))
 
+#eval isWeekend Day.sunday
+#eval getOrElse 0 (MyOption.some 10)
 #eval countLeaves exampleTree
 
--- Simple proof by cases
-example (d : Day) : isWeekend d = true ∨ isWeekend d = false := by
-  cases d <;> simp [isWeekend]
+/- Solved exercises -/
 
-/-
-Exercises:
-1. Define a function previousDay : Day → Day
-2. Define mapTree : (α → β) → MyTree α → MyTree β
-3. Define treeSize : MyTree α → Nat
-4. Prove by cases that nextDay d is always a valid Day
+def previousDay : Day → Day
+  | .monday => .sunday
+  | .tuesday => .monday
+  | .wednesday => .tuesday
+  | .thursday => .wednesday
+  | .friday => .thursday
+  | .saturday => .friday
+  | .sunday => .saturday
+
+def mapTree {α β : Type} (f : α → β) : MyTree α → MyTree β
+  | .leaf value => .leaf (f value)
+  | .node left right => .node (mapTree f left) (mapTree f right)
+
+-- This size counts both leaves and internal nodes.
+def treeSize {α : Type} : MyTree α → Nat
+  | .leaf _ => 1
+  | .node left right => 1 + treeSize left + treeSize right
+
+/- There is no separate proof that a result is a valid `Day`: Lean's return type
+   already guarantees it. This theorem demonstrates that the seven cases reduce. -/
+theorem previous_next_day (d : Day) : previousDay (nextDay d) = d := by
+  cases d <;> rfl
+
+/- Study notes:
+- Constructors are the only ways to create values of an inductive type.
+- Pattern matching must cover every constructor, making functions exhaustive.
+- `deriving Repr` enables printing; `DecidableEq` enables computable equality.
 -/

@@ -1,94 +1,79 @@
 /-
-009_TTacticsCheatsheet.lean
+009_TacticsCheatsheet.lean
 
-Goal:
-- collect the most common beginner tactics
-- provide a quick review file
+A compact reference for common beginner tactics. Each example explains the
+shape of goal for which the tactic is useful.
 -/
 
 variable (p q r : Prop)
-variable (a b c : Nat)
+variable (a b : Nat)
 
--- intro: introduce an assumption
+-- `intro` handles `∀ x, ...` and implications by introducing their input.
 example : p → p := by
   intro hp
   exact hp
 
--- exact: close the goal with a term already available
-example (hp : p) : p := by
-  exact hp
-
--- apply: use an implication or theorem to reduce the goal
+-- `apply` uses a rule whose conclusion matches the current goal.
 example (hpq : p → q) (hp : p) : q := by
   apply hpq
   exact hp
 
--- constructor: build conjunctions and structures with fields
+-- `constructor` selects a constructor and creates a goal for each argument.
 example (hp : p) (hq : q) : p ∧ q := by
   constructor
   · exact hp
   · exact hq
 
--- left / right: choose one side of a disjunction
+-- `left` and `right` select which constructor of `Or` to build.
 example (hp : p) : p ∨ q := by
   left
   exact hp
 
-example (hq : q) : p ∨ q := by
-  right
-  exact hq
-
--- cases: split into cases
+-- `cases` eliminates a value by considering every constructor.
 example (h : p ∨ q) : q ∨ p := by
   cases h with
-  | inl hp =>
-      right
-      exact hp
-  | inr hq =>
-      left
-      exact hq
+  | inl hp => exact Or.inr hp
+  | inr hq => exact Or.inl hq
 
--- rw: rewrite using an equality
+-- `rw` substitutes equals for equals in the goal.
 example (h : a = b) : a + 1 = b + 1 := by
   rw [h]
 
--- simp: simplify expressions automatically
+-- `simp` repeatedly applies tagged simplification lemmas and definitions supplied.
 example (n : Nat) : n + 0 = n := by
   simp
 
--- induction: prove by induction on Nat
+-- `induction` adds an induction hypothesis for the structurally smaller value.
 example (n : Nat) : n + 0 = n := by
   induction n with
-  | zero =>
-      rfl
+  | zero => rfl
   | succ n ih =>
-      simp [ih]
+      change n + 0 + 1 = n + 1
+      rw [ih]
 
--- have: introduce an intermediate fact
+-- `have` records an intermediate result with a readable name and type.
 example (hpq : p → q) (hqr : q → r) (hp : p) : r := by
   have hq : q := hpq hp
   exact hqr hq
 
--- From False, anything follows
-example (hFalse : False) : p := by
-  cases hFalse
+-- `rfl` proves definitional equality after Lean reduces both sides.
+example : (fun x : Nat => x + 1) 2 = 3 := by
+  rfl
 
-/-
-Mini summary:
+-- `<;>` runs the tactic on every goal produced by the preceding tactic.
+example (value : Bool) : value = true ∨ value = false := by
+  cases value <;> simp
 
-intro       -- introduce variables / hypotheses
-exact       -- solve the goal directly
-apply       -- use a theorem or implication
-constructor -- build conjunctions
-left/right  -- choose a side of a disjunction
-cases       -- split into cases
-rw          -- rewrite using equalities
-simp        -- simplify automatically
-induction   -- do induction
-have        -- create an intermediate result
+-- From an impossible value, `cases` can prove any proposition.
+example (h : False) : p := by
+  cases h
 
-Exercises:
-1. Re-prove every example in a slightly different way
-2. For each tactic, add one extra example of your own
-3. Build a personal file called MyTactics.lean
+/- Quick choice guide:
+- implication or universal quantifier: `intro`;
+- known theorem ending in the goal: `apply`;
+- equality by computation: `rfl`;
+- equality hypothesis: `rw`;
+- routine simplification: `simp`;
+- recursive data and recursive claim: `induction`;
+- alternatives stored in a value: `cases`.
 -/

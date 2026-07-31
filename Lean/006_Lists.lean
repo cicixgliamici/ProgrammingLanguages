@@ -1,64 +1,69 @@
 /-
 006_Lists.lean
 
-Goal:
-- understand Lean lists
-- define recursive functions on lists
-- prove simple properties
+Goals:
+- understand `List`, `[]`, and `::`;
+- define polymorphic recursive functions;
+- prove a property by induction on a list.
 -/
 
--- A list of natural numbers
 def numbers : List Nat := [1, 2, 3, 4]
 
 #eval numbers.length
 #eval numbers.reverse
 
--- Compute the sum of a list of natural numbers
+-- A list is either empty or a head followed by a tail.
 def sumList : List Nat → Nat
   | [] => 0
   | x :: xs => x + sumList xs
 
-#eval sumList []
-#eval sumList [1, 2, 3, 4]
-
--- Compute the length of a list manually
-def myLength : List α → Nat
+/- The implicit type variable `{α}` makes this function work for lists of any
+   element type. The element itself is ignored, hence the `_` pattern. -/
+def myLength {α : Type} : List α → Nat
   | [] => 0
   | _ :: xs => 1 + myLength xs
 
-#eval myLength [10, 20, 30]
-#eval myLength ["a", "b"]
-
--- Append an element at the end of a list
-def snoc : List α → α → List α
+-- `snoc` places an element at the right end, unlike `::`, which adds on the left.
+def snoc {α : Type} : List α → α → List α
   | [], y => [y]
   | x :: xs, y => x :: snoc xs y
 
-#eval snoc [1, 2, 3] 4
-
--- Map a function over a list
-def myMap (f : α → β) : List α → List β
+-- The result list may have a different element type, represented by `β`.
+def myMap {α β : Type} (f : α → β) : List α → List β
   | [] => []
   | x :: xs => f x :: myMap f xs
 
+#eval sumList [1, 2, 3, 4]
+#eval myLength [10, 20, 30]
+#eval snoc [1, 2, 3] 4
 #eval myMap (fun x => x + 1) [1, 2, 3]
-#eval myMap String.length ["lean", "is", "fun"]
 
--- Prove that the length of the empty list is 0
-example : myLength ([] : List Nat) = 0 := rfl
+/- Solved exercises -/
 
--- Prove that sumList [x] = x
-example (x : Nat) : sumList [x] = x := by
+def myAppend {α : Type} : List α → List α → List α
+  | [], ys => ys
+  | x :: xs, ys => x :: myAppend xs ys
+
+def containsZero : List Nat → Bool
+  | [] => false
+  | x :: xs => x == 0 || containsZero xs
+
+example : sumList [] = 0 := by
   rfl
 
--- Prove that myLength agrees with one-step expansion
-example (x : α) (xs : List α) : myLength (x :: xs) = 1 + myLength xs := by
-  rfl
+/- The induction hypothesis describes the shorter tail. After unfolding `snoc`
+   and `myLength`, `simp` rewrites the tail with that hypothesis. -/
+theorem myLength_snoc {α : Type} (xs : List α) (x : α) :
+    myLength (snoc xs x) = myLength xs + 1 := by
+  induction xs with
+  | nil => rfl
+  | cons y ys ih => simp [snoc, myLength, ih, Nat.add_assoc]
 
-/-
-Exercises:
-1. Define myAppend : List α → List α → List α
-2. Define containsZero : List Nat → Bool
-3. Prove: sumList [] = 0
-4. Prove: myLength (snoc xs x) = myLength xs + 1
+#eval myAppend [1, 2] [3, 4]
+#eval containsZero [3, 0, 5]
+
+/- Study notes:
+- Pattern matching guarantees that every list shape is handled.
+- Recursive calls must use a structurally smaller list.
+- Induction on a list has `nil` and `cons` cases, mirroring its constructors.
 -/

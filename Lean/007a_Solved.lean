@@ -1,17 +1,18 @@
 /-
-007a_Solved exercises for LogicExercises.lean
+007a_Solved.lean
+
+Alternative solutions to the exercises in 007. These longer tactic proofs are
+kept to make every intermediate step visible to a beginner.
 -/
 
 variable (p q r : Prop)
 
--- 1. Prove: (p ∧ q) → (q ∧ p)
 example : (p ∧ q) → (q ∧ p) := by
   intro hpq
   constructor
   · exact hpq.right
   · exact hpq.left
 
--- 2. Prove: (p ∨ q) → (q ∨ p)
 example : (p ∨ q) → (q ∨ p) := by
   intro hpq
   cases hpq with
@@ -22,15 +23,11 @@ example : (p ∨ q) → (q ∨ p) := by
       left
       exact hq
 
--- 3. Prove: (p → q) → (¬ q → ¬ p)
-example : (p → q) → (¬ q → ¬ p) := by
-  intro hpq
-  intro hnq
-  intro hp
+example : (p → q) → (¬q → ¬p) := by
+  intro hpq hnq hp
   apply hnq
   exact hpq hp
 
--- 4. Prove: p ∧ (q ∧ r) → (p ∧ q) ∧ r
 example : p ∧ (q ∧ r) → (p ∧ q) ∧ r := by
   intro h
   constructor

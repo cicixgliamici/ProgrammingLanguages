@@ -1,61 +1,84 @@
 /-
 015_TreeProofs.lean
 
-Goal:
-- prove basic properties about binary trees
-- practice induction on custom inductive types
+Goals:
+- perform structural induction on binary trees;
+- use one induction hypothesis for each recursive child;
+- prove that transformations preserve structural measurements.
 -/
 
 inductive BTree (α : Type) where
-  | empty : BTree α
-  | node : α → BTree α → BTree α → BTree α
+  | empty
+  | node (value : α) (left right : BTree α)
 deriving Repr
 
-def size : BTree α → Nat
-  | BTree.empty => 0
-  | BTree.node _ l r => 1 + size l + size r
+def size {α : Type} : BTree α → Nat
+  | .empty => 0
+  | .node _ left right => 1 + size left + size right
 
-def height : BTree α → Nat
-  | BTree.empty => 0
-  | BTree.node _ l r => 1 + max (height l) (height r)
+def height {α : Type} : BTree α → Nat
+  | .empty => 0
+  | .node _ left right => 1 + max (height left) (height right)
 
-def mirror : BTree α → BTree α
-  | BTree.empty => BTree.empty
-  | BTree.node x l r => BTree.node x (mirror r) (mirror l)
+def mirror {α : Type} : BTree α → BTree α
+  | .empty => .empty
+  | .node value left right => .node value (mirror right) (mirror left)
 
--- Mirror preserves size
-theorem size_mirror (t : BTree α) : size (mirror t) = size t := by
-  induction t with
-  | empty =>
-      rfl
-  | node x l r ihl ihr =>
-      simp [mirror, size, ihl, ihr, Nat.add_comm, Nat.add_left_comm, Nat.add_assoc]
+def countLeaves {α : Type} : BTree α → Nat
+  | .empty => 0
+  | .node _ .empty .empty => 1
+  | .node _ left right => countLeaves left + countLeaves right
 
--- Mirror preserves height
-theorem height_mirror (t : BTree α) : height (mirror t) = height t := by
-  induction t with
-  | empty =>
-      rfl
-  | node x l r ihl ihr =>
-      simp [mirror, height, ihl, ihr, max_comm]
+def mapTree {α β : Type} (f : α → β) : BTree α → BTree β
+  | .empty => .empty
+  | .node value left right => .node (f value) (mapTree f left) (mapTree f right)
 
--- Mirroring twice returns the original tree
-theorem mirror_mirror (t : BTree α) : mirror (mirror t) = t := by
-  induction t with
-  | empty =>
-      rfl
-  | node x l r ihl ihr =>
-      simp [mirror, ihl, ihr]
+theorem size_mirror (tree : BTree α) : size (mirror tree) = size tree := by
+  induction tree with
+  | empty => rfl
+  | node value left right leftIH rightIH =>
+      simp [mirror, size, leftIH, rightIH, Nat.add_comm, Nat.add_left_comm]
 
--- Basic examples
-example : size (BTree.empty : BTree Nat) = 0 := rfl
-example : height (BTree.empty : BTree Nat) = 0 := rfl
-example : mirror (BTree.empty : BTree Nat) = BTree.empty := rfl
+theorem height_mirror (tree : BTree α) : height (mirror tree) = height tree := by
+  induction tree with
+  | empty => rfl
+  | node value left right leftIH rightIH =>
+      simp [mirror, height, leftIH, rightIH, Nat.max_comm]
 
-/-
-Exercises:
-1. Define countLeaves and prove: countLeaves (mirror t) = countLeaves t
-2. Define mapTree and prove: size (mapTree f t) = size t
-3. Prove: height (BTree.node x BTree.empty BTree.empty) = 1
-4. Prove: size (BTree.node x l r) = 1 + size l + size r
+theorem mirror_mirror (tree : BTree α) : mirror (mirror tree) = tree := by
+  induction tree with
+  | empty => rfl
+  | node value left right leftIH rightIH =>
+      simp [mirror, leftIH, rightIH]
+
+/- Solved exercises -/
+
+/- `countLeaves` has a special leaf pattern, so explicit case splitting after
+   induction lets Lean expose the necessary empty/non-empty child shapes. -/
+theorem countLeaves_mirror (tree : BTree α) :
+    countLeaves (mirror tree) = countLeaves tree := by
+  induction tree with
+  | empty => rfl
+  | node value left right leftIH rightIH =>
+      cases left <;> cases right <;>
+        simp_all [mirror, countLeaves, Nat.add_comm]
+
+theorem size_mapTree (f : α → β) (tree : BTree α) :
+    size (mapTree f tree) = size tree := by
+  induction tree with
+  | empty => rfl
+  | node value left right leftIH rightIH =>
+      simp [mapTree, size, leftIH, rightIH]
+
+example (value : α) : height (BTree.node value .empty .empty) = 1 := by
+  rfl
+
+example (value : α) (left right : BTree α) :
+    size (BTree.node value left right) = 1 + size left + size right := by
+  rfl
+
+/- Study notes:
+- Tree induction supplies one hypothesis for `left` and one for `right`.
+- Commutativity is needed when mirroring swaps the order of subtrees.
+- A theorem true by unfolding a single definition is best proved with `rfl`.
 -/

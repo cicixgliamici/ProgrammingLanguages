@@ -1,74 +1,83 @@
 /-
 013_ListProofs.lean
 
-Goal:
-- prove basic properties of recursive list functions
-- practice induction on lists
+Goals:
+- prove algebraic laws for recursive list functions;
+- identify and prove helper lemmas;
+- follow the same structure in definitions and induction proofs.
 -/
 
--- Reintroduce the functions locally for a self-contained file
-
-def myAppend : List α → List α → List α
+def myAppend {α : Type} : List α → List α → List α
   | [], ys => ys
   | x :: xs, ys => x :: myAppend xs ys
 
-def myLength : List α → Nat
+def myLength {α : Type} : List α → Nat
   | [] => 0
   | _ :: xs => 1 + myLength xs
 
-def myReverse : List α → List α
+def myReverse {α : Type} : List α → List α
   | [] => []
   | x :: xs => myAppend (myReverse xs) [x]
 
--- Appending [] on the right changes nothing
+def myMap {α β : Type} (f : α → β) : List α → List β
+  | [] => []
+  | x :: xs => f x :: myMap f xs
+
 theorem myAppend_nil (xs : List α) : myAppend xs [] = xs := by
   induction xs with
-  | nil =>
-      rfl
-  | cons x xs ih =>
-      simp [myAppend, ih]
+  | nil => rfl
+  | cons x xs ih => simp [myAppend, ih]
 
--- Length of append
+theorem myAppend_assoc (xs ys zs : List α) :
+    myAppend (myAppend xs ys) zs = myAppend xs (myAppend ys zs) := by
+  induction xs with
+  | nil => rfl
+  | cons x xs ih => simp [myAppend, ih]
+
 theorem myLength_append (xs ys : List α) :
     myLength (myAppend xs ys) = myLength xs + myLength ys := by
   induction xs with
-  | nil =>
-      simp [myAppend, myLength]
-  | cons x xs ih =>
-      simp [myAppend, myLength, ih]
+  | nil => simp [myAppend, myLength]
+  | cons x xs ih => simp [myAppend, myLength, ih, Nat.add_assoc]
 
--- A helper lemma for reverse
+/- Reverse needs a helper lemma because its recursive branch appends a singleton.
+   Proving the intermediate shape explicitly keeps the final proof short. -/
 theorem myReverse_append_singleton (xs : List α) (x : α) :
     myReverse (myAppend xs [x]) = x :: myReverse xs := by
   induction xs with
-  | nil =>
-      simp [myAppend, myReverse]
-  | cons y ys ih =>
-      simp [myAppend, myReverse, ih]
+  | nil => rfl
+  | cons y ys ih => simp [myAppend, myReverse, ih]
 
--- Length is preserved by reverse
 theorem myLength_reverse (xs : List α) :
     myLength (myReverse xs) = myLength xs := by
   induction xs with
-  | nil =>
-      rfl
+  | nil => rfl
   | cons x xs ih =>
-      simp [myReverse, myLength_append, myLength, ih]
+      simp [myReverse, myLength_append, myLength, ih, Nat.add_comm]
 
--- Double reverse gives back the original list
-theorem myReverse_reverse (xs : List α) :
-    myReverse (myReverse xs) = xs := by
+theorem myReverse_reverse (xs : List α) : myReverse (myReverse xs) = xs := by
   induction xs with
-  | nil =>
-      rfl
-  | cons x xs ih =>
-      simp [myReverse, myReverse_append_singleton, ih]
+  | nil => rfl
+  | cons x xs ih => simp [myReverse, myReverse_append_singleton, ih]
 
-/-
-Exercises:
-1. Prove: myAppend (myAppend xs ys) zs = myAppend xs (myAppend ys zs)
-2. Define myMap and prove: myMap id xs = xs
-3. Prove: myLength (x :: xs) = 1 + myLength xs
-4. Prove: myReverse [] = []
-5. Prove: myReverse [x] = [x]
+/- Solved exercises -/
+
+theorem myMap_identity (xs : List α) : myMap (fun x => x) xs = xs := by
+  induction xs with
+  | nil => rfl
+  | cons x xs ih => simp [myMap, ih]
+
+example (x : α) (xs : List α) : myLength (x :: xs) = 1 + myLength xs := by
+  rfl
+
+example : myReverse ([] : List α) = [] := by
+  rfl
+
+example (x : α) : myReverse [x] = [x] := by
+  rfl
+
+/- Study notes:
+- Induct on the argument inspected by the recursive function.
+- A good helper lemma describes the exact intermediate expression blocking `simp`.
+- Named theorems can be supplied to `simp` explicitly without making them global rules.
 -/

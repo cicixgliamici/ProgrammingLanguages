@@ -1,52 +1,68 @@
 /-
 005_Induction.lean
 
-Goal:
-- understand induction
-- prove properties on natural numbers
-- see a recursive function
+Goals:
+- understand structural recursion on natural numbers;
+- understand the base case and the inductive step;
+- use an induction hypothesis in a proof.
 -/
 
--- Recursive function: factorial
+/- `fact` follows the two constructors of `Nat`: zero and successor.
+   Lean accepts the definition because every recursive call uses the smaller `n`. -/
 def fact : Nat → Nat
   | 0 => 1
   | n + 1 => (n + 1) * fact n
 
 #eval fact 0
-#eval fact 1
 #eval fact 5
 
--- Simple proof by induction
-example (n : Nat) : n + 0 = n := by
+/- Induction creates one goal for zero and one for `n + 1`.
+   In the successor case, `ih` is the result already known for `n`. -/
+theorem add_zero_by_induction (n : Nat) : n + 0 = n := by
   induction n with
-  | zero =>
-      rfl
+  | zero => rfl
   | succ n ih =>
-      simp [Nat.succ_eq_add_one, ih]
+      change n + 0 + 1 = n + 1
+      rw [ih]
 
--- Another classic property
-example (n : Nat) : 0 + n = n := by
+-- This theorem does not require induction because `simp` knows the library rule.
+theorem zero_add_with_simp (n : Nat) : 0 + n = n := by
   simp
 
--- Double defined recursively
 def myDouble : Nat → Nat
   | 0 => 0
   | n + 1 => myDouble n + 2
 
-#eval myDouble 0
-#eval myDouble 4
-
--- Property of myDouble
-example (n : Nat) : myDouble n = 2 * n := by
+theorem myDouble_eq_twice (n : Nat) : myDouble n = 2 * n := by
   induction n with
-  | zero =>
-      rfl
-  | succ n ih =>
-      simp [myDouble, ih, Nat.mul_add, Nat.add_assoc, Nat.add_left_comm, Nat.add_comm]
+  | zero => rfl
+  | succ n ih => simp [myDouble, ih, Nat.mul_add]
 
-/-
-Exercises:
-1. Define sumTo : Nat → Nat, computing 0 + 1 + ... + n
-2. Prove by induction that sumTo 0 = 0
-3. Prove a simple property about one of your recursive functions
+/- Solved exercises -/
+
+-- `sumTo n` computes 0 + 1 + ... + n.
+def sumTo : Nat → Nat
+  | 0 => 0
+  | n + 1 => sumTo n + (n + 1)
+
+#eval sumTo 0
+#eval sumTo 5
+
+-- The base equation is true by computation, so reflexivity is sufficient.
+example : sumTo 0 = 0 := by
+  rfl
+
+-- Expanding the recursive equation exposes exactly the successor case.
+theorem sumTo_succ (n : Nat) : sumTo (n + 1) = sumTo n + (n + 1) := by
+  rfl
+
+-- A recursive computation never decreases its previous partial sum.
+theorem sumTo_le_succ (n : Nat) : sumTo n ≤ sumTo (n + 1) := by
+  simp [sumTo]
+
+/- Study notes:
+- Use `rfl` when both sides reduce to the same expression by computation.
+- Use `simp [definition, ih]` to unfold a definition and apply known facts.
+- Induction is appropriate when the statement for `n + 1` depends on the
+  same statement for `n`.
 -/

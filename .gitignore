@@ -29,3 +29,11 @@ Thumbs.db
 # Logs
 *.log
 logs/ 
+
+# Coq / Rocq generated files
+*.vo
+*.vos
+*.vok
+*.glob
+.*.aux
+.lia.cache

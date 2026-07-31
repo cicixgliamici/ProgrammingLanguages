@@ -1,89 +1,83 @@
 /-
 014_Trees.lean
 
-Goal:
-- define a binary tree
-- write recursive functions on trees
-- practice structural recursion
+Goals:
+- model recursive branching data;
+- write structurally recursive tree traversals;
+- distinguish size, height, leaves, and empty children.
 -/
 
 inductive BTree (α : Type) where
-  | empty : BTree α
-  | node : α → BTree α → BTree α → BTree α
+  | empty
+  | node (value : α) (left right : BTree α)
 deriving Repr
 
--- Example trees
 def tree1 : BTree Nat :=
-  BTree.node 10
-    (BTree.node 5 BTree.empty BTree.empty)
-    (BTree.node 20 BTree.empty BTree.empty)
+  .node 10 (.node 5 .empty .empty) (.node 20 .empty .empty)
 
 def tree2 : BTree Nat :=
-  BTree.node 1
-    (BTree.node 2
-      (BTree.node 3 BTree.empty BTree.empty)
-      BTree.empty)
-    BTree.empty
+  .node 1 (.node 2 (.node 3 .empty .empty) .empty) .empty
 
--- Number of nodes
-def size : BTree α → Nat
-  | BTree.empty => 0
-  | BTree.node _ l r => 1 + size l + size r
+def size {α : Type} : BTree α → Nat
+  | .empty => 0
+  | .node _ left right => 1 + size left + size right
+
+def height {α : Type} : BTree α → Nat
+  | .empty => 0
+  | .node _ left right => 1 + max (height left) (height right)
+
+def countLeaves {α : Type} : BTree α → Nat
+  | .empty => 0
+  | .node _ .empty .empty => 1
+  | .node _ left right => countLeaves left + countLeaves right
+
+def mirror {α : Type} : BTree α → BTree α
+  | .empty => .empty
+  | .node value left right => .node value (mirror right) (mirror left)
+
+def inorder {α : Type} : BTree α → List α
+  | .empty => []
+  | .node value left right => inorder left ++ [value] ++ inorder right
+
+def preorder {α : Type} : BTree α → List α
+  | .empty => []
+  | .node value left right => [value] ++ preorder left ++ preorder right
+
+def postorder {α : Type} : BTree α → List α
+  | .empty => []
+  | .node value left right => postorder left ++ postorder right ++ [value]
+
+/- Solved exercises -/
+
+-- Every node has two child positions, including positions containing `empty`.
+def countEmpty {α : Type} : BTree α → Nat
+  | .empty => 1
+  | .node _ left right => countEmpty left + countEmpty right
+
+def contains {α : Type} [BEq α] (wanted : α) : BTree α → Bool
+  | .empty => false
+  | .node value left right =>
+      value == wanted || contains wanted left || contains wanted right
+
+def mapTree {α β : Type} (f : α → β) : BTree α → BTree β
+  | .empty => .empty
+  | .node value left right => .node (f value) (mapTree f left) (mapTree f right)
+
+def treeSum : BTree Nat → Nat
+  | .empty => 0
+  | .node value left right => value + treeSum left + treeSum right
+
+example : size (BTree.empty : BTree Nat) = 0 := by
+  rfl
 
 #eval size tree1
-#eval size tree2
-
--- Height of the tree
-def height : BTree α → Nat
-  | BTree.empty => 0
-  | BTree.node _ l r => 1 + max (height l) (height r)
-
-#eval height tree1
 #eval height tree2
-
--- Number of leaves, counting only non-empty leaves
-def countLeaves : BTree α → Nat
-  | BTree.empty => 0
-  | BTree.node _ BTree.empty BTree.empty => 1
-  | BTree.node _ l r => countLeaves l + countLeaves r
-
-#eval countLeaves tree1
-#eval countLeaves tree2
-
--- Mirror the tree
-def mirror : BTree α → BTree α
-  | BTree.empty => BTree.empty
-  | BTree.node x l r => BTree.node x (mirror r) (mirror l)
-
-#eval mirror tree1
-
--- Inorder traversal
-def inorder : BTree α → List α
-  | BTree.empty => []
-  | BTree.node x l r => inorder l ++ [x] ++ inorder r
-
 #eval inorder tree1
-#eval inorder tree2
+#eval contains 20 tree1
+#eval treeSum tree1
 
--- Preorder traversal
-def preorder : BTree α → List α
-  | BTree.empty => []
-  | BTree.node x l r => [x] ++ preorder l ++ preorder r
-
-#eval preorder tree1
-
--- Postorder traversal
-def postorder : BTree α → List α
-  | BTree.empty => []
-  | BTree.node x l r => postorder l ++ postorder r ++ [x]
-
-#eval postorder tree1
-
-/-
-Exercises:
-1. Define countEmpty : BTree α → Nat
-2. Define contains [DecidableEq α] : α → BTree α → Bool
-3. Define mapTree : (α → β) → BTree α → BTree β
-4. Define treeSum : BTree Nat → Nat
-5. Prove: size BTree.empty = 0
+/- Study notes:
+- Structural recursion makes one recursive call for each recursive child.
+- Traversal order is determined only by where the root value is placed.
+- `BEq α` supplies executable boolean equality for values of type `α`.
 -/

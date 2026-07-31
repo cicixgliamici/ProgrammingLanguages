@@ -159,7 +159,8 @@ Common gotchas:
 # =============================================================================
 
 def main() -> None:
-    output_path = Path("Python/results.json")
+    # Keep generated data beside this lesson, regardless of the working directory.
+    output_path = Path(__file__).with_name("results.json")
 
     # 1) try/except/else/finally demo
     raw_scores = [78, 99, 120]  # 120 is invalid on purpose

@@ -1,86 +1,80 @@
 /-
 012_MoreLists.lean
 
-Goal:
-- practice recursive programming on lists
-- define common list-processing functions
-- prepare for list proofs
+Goals:
+- implement common list combinators by structural recursion;
+- recognize how parameters evolve in recursive calls;
+- prepare reusable definitions for later proofs.
 -/
 
--- Append two lists
-def myAppend : List α → List α → List α
+def myAppend {α : Type} : List α → List α → List α
   | [], ys => ys
   | x :: xs, ys => x :: myAppend xs ys
 
-#eval myAppend [1, 2] [3, 4]
-#eval myAppend ([] : List Nat) [7, 8]
-
--- Reverse a list
-def myReverse : List α → List α
+-- This direct definition is clear but repeatedly traverses intermediate lists.
+def myReverse {α : Type} : List α → List α
   | [] => []
   | x :: xs => myAppend (myReverse xs) [x]
 
-#eval myReverse [1, 2, 3, 4]
-#eval myReverse ["a", "b", "c"]
-
--- Filter with a predicate
-def myFilter (p : α → Bool) : List α → List α
+def myFilter {α : Type} (predicate : α → Bool) : List α → List α
   | [] => []
   | x :: xs =>
-      if p x then
-        x :: myFilter p xs
-      else
-        myFilter p xs
+      if predicate x then x :: myFilter predicate xs
+      else myFilter predicate xs
 
-#eval myFilter (fun n => n % 2 == 0) [1, 2, 3, 4, 5, 6]
-
--- Take the first n elements
-def myTake : Nat → List α → List α
+def myTake {α : Type} : Nat → List α → List α
   | 0, _ => []
   | _ + 1, [] => []
   | n + 1, x :: xs => x :: myTake n xs
 
-#eval myTake 3 [10, 20, 30, 40, 50]
-#eval myTake 10 [1, 2]
-
--- Drop the first n elements
-def myDrop : Nat → List α → List α
+def myDrop {α : Type} : Nat → List α → List α
   | 0, xs => xs
   | _ + 1, [] => []
   | n + 1, _ :: xs => myDrop n xs
 
-#eval myDrop 2 [10, 20, 30, 40]
-#eval myDrop 10 [1, 2]
-
--- Zip two lists together until one runs out
-def myZip : List α → List β → List (α × β)
+-- Zipping stops as soon as either input is exhausted.
+def myZip {α β : Type} : List α → List β → List (α × β)
   | [], _ => []
   | _, [] => []
   | x :: xs, y :: ys => (x, y) :: myZip xs ys
 
-#eval myZip [1, 2, 3] ["a", "b", "c"]
-#eval myZip [1, 2] ["x"]
+/- A left fold carries `accumulator` through the traversal. Tail recursion makes
+   it suitable for iterative computations such as sums. -/
+def myFoldl {α β : Type} (combine : β → α → β) : β → List α → β
+  | accumulator, [] => accumulator
+  | accumulator, x :: xs => myFoldl combine (combine accumulator x) xs
 
--- A left fold
-def myFoldl (f : β → α → β) : β → List α → β
-  | acc, [] => acc
-  | acc, x :: xs => myFoldl f (f acc x) xs
+/- Solved exercises -/
 
-#eval myFoldl (fun acc x => acc + x) 0 [1, 2, 3, 4]
-#eval myFoldl (fun acc s => acc ++ s) "" ["Le", "an"]
+def myLength {α : Type} : List α → Nat
+  | [] => 0
+  | _ :: xs => 1 + myLength xs
 
--- Small basic facts
-example : myAppend [1, 2] [3] = [1, 2, 3] := rfl
-example : myReverse [1, 2] = [2, 1] := rfl
-example : myTake 2 [5, 6, 7] = [5, 6] := rfl
-example : myDrop 2 [5, 6, 7] = [7] := rfl
+def myMap {α β : Type} (f : α → β) : List α → List β
+  | [] => []
+  | x :: xs => f x :: myMap f xs
 
-/-
-Exercises:
-1. Define myLength : List α → Nat
-2. Define myMap : (α → β) → List α → List β
-3. Define myAny : (α → Bool) → List α → Bool
-4. Define myAll : (α → Bool) → List α → Bool
-5. Prove: myAppend [] xs = xs
-6. Prove: myTake 0 xs = []
+def myAny {α : Type} (predicate : α → Bool) : List α → Bool
+  | [] => false
+  | x :: xs => predicate x || myAny predicate xs
+
+def myAll {α : Type} (predicate : α → Bool) : List α → Bool
+  | [] => true
+  | x :: xs => predicate x && myAll predicate xs
+
+example (xs : List α) : myAppend [] xs = xs := by
+  rfl
+
+example (xs : List α) : myTake 0 xs = [] := by
+  rfl
+
+#eval myReverse [1, 2, 3, 4]
+#eval myFilter (fun n => n % 2 == 0) [1, 2, 3, 4, 5, 6]
+#eval myFoldl (fun total n => total + n) 0 [1, 2, 3, 4]
+#eval myAny (fun n => n == 3) [1, 2, 3]
+
+/- Study notes:
+- `myTake` recurses on both the number and the list.
+- The neutral result of `any` is false; the neutral result of `all` is true.
+- A fold separates traversal from the operation performed at every element.
 -/
