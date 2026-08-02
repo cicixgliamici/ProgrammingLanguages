@@ -41,12 +41,21 @@ example : (p → r) → (q → r) → p ∨ q → r := by
   | inl hp => exact hpr hp
   | inr hq => exact hqr hq
 
-/- Solved exercises -/
+/-
+Solved exercises
 
+Exercise 1: prove `(p ∧ q) → (q ∧ p)`.
+Exercise 2: prove `(p ∨ q) → (q ∨ p)`.
+Exercise 3: prove `(p → q) → (¬q → ¬p)`.
+Exercise 4: prove `p ∧ (q ∧ r) → (p ∧ q) ∧ r`.
+-/
+
+-- Destruct the input pair of proofs, then rebuild it in the opposite order.
 theorem and_comm_from_proofs : (p ∧ q) → (q ∧ p) := by
   intro hpq
   exact ⟨hpq.right, hpq.left⟩
 
+-- Each constructor of the input disjunction selects the opposite output side.
 theorem or_comm_from_cases : (p ∨ q) → (q ∨ p) := by
   intro hpq
   cases hpq with

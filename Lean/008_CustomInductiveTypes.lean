@@ -51,8 +51,17 @@ def exampleTree : MyTree Nat :=
 #eval getOrElse 0 (MyOption.some 10)
 #eval countLeaves exampleTree
 
-/- Solved exercises -/
+/-
+Solved exercises
 
+Exercise 1: define `previousDay : Day → Day`.
+Exercise 2: define `mapTree : (α → β) → MyTree α → MyTree β`.
+Exercise 3: define `treeSize : MyTree α → Nat`.
+Exercise 4: prove by cases that moving to the next day and then to the
+previous day returns the original `Day`.
+-/
+
+-- Pattern matching covers every constructor, including the weekly wraparound.
 def previousDay : Day → Day
   | .monday => .sunday
   | .tuesday => .monday
@@ -62,6 +71,7 @@ def previousDay : Day → Day
   | .saturday => .friday
   | .sunday => .saturday
 
+-- Mapping changes leaf values while preserving the exact tree shape.
 def mapTree {α β : Type} (f : α → β) : MyTree α → MyTree β
   | .leaf value => .leaf (f value)
   | .node left right => .node (mapTree f left) (mapTree f right)

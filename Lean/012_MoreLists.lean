@@ -44,7 +44,16 @@ def myFoldl {α β : Type} (combine : β → α → β) : β → List α → β
   | accumulator, [] => accumulator
   | accumulator, x :: xs => myFoldl combine (combine accumulator x) xs
 
-/- Solved exercises -/
+/-
+Solved exercises
+
+Exercise 1: define `myLength : List α → Nat`.
+Exercise 2: define `myMap : (α → β) → List α → List β`.
+Exercise 3: define `myAny : (α → Bool) → List α → Bool`.
+Exercise 4: define `myAll : (α → Bool) → List α → Bool`.
+Exercise 5: prove that `myAppend [] xs = xs`.
+Exercise 6: prove that `myTake 0 xs = []`.
+-/
 
 def myLength {α : Type} : List α → Nat
   | [] => 0
@@ -54,10 +63,12 @@ def myMap {α β : Type} (f : α → β) : List α → List β
   | [] => []
   | x :: xs => f x :: myMap f xs
 
+-- Boolean `||` records whether the predicate succeeds at least once.
 def myAny {α : Type} (predicate : α → Bool) : List α → Bool
   | [] => false
   | x :: xs => predicate x || myAny predicate xs
 
+-- The empty list returns `true`, the neutral value for Boolean conjunction.
 def myAll {α : Type} (predicate : α → Bool) : List α → Bool
   | [] => true
   | x :: xs => predicate x && myAll predicate xs

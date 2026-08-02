@@ -63,7 +63,14 @@ def users : List User :=
 -- `head!` requests `Inhabited User` as a fallback for an empty list.
 #eval Describe.describe users.head!
 
-/- Solved exercises -/
+/-
+Solved exercises
+
+Exercise 1: define a `DefaultValue` typeclass containing one default value.
+Exercise 2: provide `DefaultValue` instances for `Nat` and `String`.
+Exercise 3: define `headOrDefault`, using the instance when a list is empty.
+Exercise 4: verify the behavior on an empty list and a non-empty list.
+-/
 
 -- A default value is useful when a computation has no result.
 class DefaultValue (α : Type) where
@@ -75,6 +82,7 @@ instance : DefaultValue Nat where
 instance : DefaultValue String where
   defaultValue := ""
 
+-- The typeclass removes the need to pass a default at every call site.
 def headOrDefault {α : Type} [DefaultValue α] : List α → α
   | [] => DefaultValue.defaultValue
   | value :: _ => value

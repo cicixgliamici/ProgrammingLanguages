@@ -39,8 +39,17 @@ def sumElim {α β γ : Type} (onLeft : α → γ) (onRight : β → γ) :
   | .inl value => onLeft value
   | .inr value => onRight value
 
-/- Solved exercises -/
+/-
+Solved exercises
 
+Exercise 1: define `pairMap : (α → γ) → (β → δ) → (α × β) → (γ × δ)`.
+Exercise 2: define `isLeft : MySum α β → Bool`.
+Exercise 3: define `isRight : MySum α β → Bool`.
+Exercise 4: prove that `swapPair (swapPair pair) = pair`.
+Exercise 5: define `mergeSum : MySum α α → α`.
+-/
+
+-- Each function transforms its own component without coupling the two types.
 def pairMap {α β γ δ : Type} (f : α → γ) (g : β → δ) :
     α × β → γ × δ
   | (left, right) => (f left, g right)
@@ -57,6 +66,7 @@ theorem swapPair_twice (pair : α × β) : swapPair (swapPair pair) = pair := by
   cases pair
   rfl
 
+-- When both alternatives contain the same type, either branch yields an `α`.
 def mergeSum {α : Type} : MySum α α → α
   | .inl value => value
   | .inr value => value

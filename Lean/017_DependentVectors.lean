@@ -52,8 +52,16 @@ def exampleVector : SizedList String 3 :=
 #eval get exampleVector ⟨1, by decide⟩
 #eval toList (map String.length exampleVector)
 
-/- Solved exercises -/
+/-
+Solved exercises
 
+Exercise 1: define `replicate`, whose result length equals the requested count.
+Exercise 2: define a total `last` function for every non-empty `SizedList`.
+Exercise 3: prove that converting after `map` agrees with `List.map`.
+Exercise 4: prove that converting after `append` agrees with `List.append`.
+-/
+
+-- Recursing on `count` lets each branch construct the required length index.
 def replicate (count : Nat) (value : α) : SizedList α count :=
   match count with
   | 0 => .nil
@@ -65,6 +73,7 @@ def last : (n : Nat) → SizedList α (n + 1) → α
   | 0, .cons value .nil => value
   | n + 1, .cons _ rest => last n rest
 
+-- Structural induction exposes the same recursion used by both map functions.
 theorem toList_map (f : α → β) (values : SizedList α n) :
     toList (map f values) = List.map f (toList values) := by
   induction values with

@@ -38,7 +38,16 @@ theorem myDouble_eq_twice (n : Nat) : myDouble n = 2 * n := by
   | zero => rfl
   | succ n ih => simp [myDouble, ih, Nat.mul_add]
 
-/- Solved exercises -/
+/-
+Solved exercises
+
+Exercise 1: define `sumTo : Nat → Nat`, computing `0 + 1 + ... + n`.
+Exercise 2: prove that `sumTo 0 = 0`.
+Exercise 3: prove a simple property of the recursive function `sumTo`.
+
+The statements remain next to their solutions so the file can be used both as
+an exercise sheet and as a worked reference.
+-/
 
 -- `sumTo n` computes 0 + 1 + ... + n.
 def sumTo : Nat → Nat

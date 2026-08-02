@@ -60,8 +60,17 @@ theorem myReverse_reverse (xs : List α) : myReverse (myReverse xs) = xs := by
   | nil => rfl
   | cons x xs ih => simp [myReverse, myReverse_append_singleton, ih]
 
-/- Solved exercises -/
+/-
+Solved exercises
 
+Exercise 1: prove associativity of `myAppend`.
+Exercise 2: define `myMap` and prove that mapping the identity leaves a list unchanged.
+Exercise 3: prove `myLength (x :: xs) = 1 + myLength xs`.
+Exercise 4: prove `myReverse [] = []`.
+Exercise 5: prove `myReverse [x] = [x]`.
+-/
+
+-- Induction follows `myMap`: the head is unchanged and `ih` handles the tail.
 theorem myMap_identity (xs : List α) : myMap (fun x => x) xs = xs := by
   induction xs with
   | nil => rfl

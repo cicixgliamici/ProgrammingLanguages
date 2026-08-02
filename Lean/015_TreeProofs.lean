@@ -51,7 +51,14 @@ theorem mirror_mirror (tree : BTree α) : mirror (mirror tree) = tree := by
   | node value left right leftIH rightIH =>
       simp [mirror, leftIH, rightIH]
 
-/- Solved exercises -/
+/-
+Solved exercises
+
+Exercise 1: define `countLeaves` and prove that mirroring preserves its result.
+Exercise 2: define `mapTree` and prove that mapping preserves tree size.
+Exercise 3: prove that a node with two empty children has height one.
+Exercise 4: prove the defining size equation for a non-empty node.
+-/
 
 /- `countLeaves` has a special leaf pattern, so explicit case splitting after
    induction lets Lean expose the necessary empty/non-empty child shapes. -/
@@ -70,6 +77,7 @@ theorem size_mapTree (f : α → β) (tree : BTree α) :
   | node value left right leftIH rightIH =>
       simp [mapTree, size, leftIH, rightIH]
 
+-- Unfolding computes both empty subtree heights to zero.
 example (value : α) : height (BTree.node value .empty .empty) = 1 := by
   rfl
 

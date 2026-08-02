@@ -61,6 +61,15 @@ def exampleEnvironment : Environment
 #eval exampleExpression.evaluate exampleEnvironment
 #eval exampleExpression.optimize.evaluate exampleEnvironment
 
+/-
+Verification exercise
+
+Prove that `Expr.optimize` preserves evaluation for every expression and every
+environment. The helper lemmas below first verify the local rewrite rules for
+addition and multiplication; the final theorem combines them by structural
+induction on the expression.
+-/
+
 /- Helper lemmas describe the behavior of the optimizer after its recursive
    results are already known. Separating them keeps the main induction readable. -/
 theorem optimizeAdd_correct (environment : Environment) (left right : Expr) :

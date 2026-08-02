@@ -47,13 +47,22 @@ def postorder {α : Type} : BTree α → List α
   | .empty => []
   | .node value left right => postorder left ++ postorder right ++ [value]
 
-/- Solved exercises -/
+/-
+Solved exercises
+
+Exercise 1: define `countEmpty : BTree α → Nat`.
+Exercise 2: define `contains : α → BTree α → Bool` for comparable values.
+Exercise 3: define `mapTree : (α → β) → BTree α → BTree β`.
+Exercise 4: define `treeSum : BTree Nat → Nat`.
+Exercise 5: prove that the size of an empty tree is zero.
+-/
 
 -- Every node has two child positions, including positions containing `empty`.
 def countEmpty {α : Type} : BTree α → Nat
   | .empty => 1
   | .node _ left right => countEmpty left + countEmpty right
 
+-- `[BEq α]` keeps the traversal generic while providing Boolean equality.
 def contains {α : Type} [BEq α] (wanted : α) : BTree α → Bool
   | .empty => false
   | .node value left right =>
@@ -63,6 +72,7 @@ def mapTree {α β : Type} (f : α → β) : BTree α → BTree β
   | .empty => .empty
   | .node value left right => .node (f value) (mapTree f left) (mapTree f right)
 
+-- Empty subtrees contribute zero, while nodes add their value and both sums.
 def treeSum : BTree Nat → Nat
   | .empty => 0
   | .node value left right => value + treeSum left + treeSum right

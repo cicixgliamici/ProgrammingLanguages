@@ -1,4 +1,9 @@
-"""Explore indexing, slicing, boolean masks, views, and copies."""
+"""Explore indexing, slicing, boolean masks, views, and copies.
+
+Indexing is not only selection: it also determines whether a result shares the
+original memory. Understanding that distinction prevents accidental mutation
+and unnecessary allocations in larger numerical programs.
+"""
 
 from __future__ import annotations
 
@@ -9,6 +14,8 @@ def show_indexing() -> None:
     """Select individual values, rectangular regions, and whole axes."""
     grid = np.arange(1, 13).reshape(3, 4)
 
+    # A comma separates axes: the first index selects rows and the second
+    # selects columns. A colon keeps every position along the selected axis.
     print("Grid:\n", grid)
     print("Row 1:", grid[1])
     print("Column 2:", grid[:, 2])
@@ -21,6 +28,8 @@ def show_boolean_selection() -> None:
     scores = np.array([42, 71, 88, 53, 95, 67])
     passed_mask = scores >= 60
 
+    # Parentheses are required around comparisons combined with `&` or `|`
+    # because Python's operator precedence differs from mathematical notation.
     print("Mask:", passed_mask)
     print("Passing scores:", scores[passed_mask])
     print("High scores:", scores[(scores >= 80) & (scores <= 100)])
@@ -32,6 +41,8 @@ def show_view_and_copy() -> None:
     view = original[1:4]
     independent_copy = original[1:4].copy()
 
+    # Basic slicing normally creates a view. The explicit copy is appropriate
+    # when later mutations must not affect the source array.
     view[0] = 999
     independent_copy[1] = -1
 

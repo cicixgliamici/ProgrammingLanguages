@@ -46,18 +46,29 @@ def optionBind {α β : Type} (value : Option α)
 #eval safeDiv 10 0
 #eval optionBind (some 5) (fun x => some (x + 3))
 
-/- Solved exercises -/
+/-
+Solved exercises
 
+Exercise 1: define `safeLast : List α → Option α`.
+Exercise 2: define `safeNth : List α → Nat → Option α`.
+Exercise 3: prove that `optionMap f none = none`.
+Exercise 4: prove that `getOrElse (some x) d = x`.
+Exercise 5: define `isSome : Option α → Bool`.
+-/
+
+-- A singleton reveals the answer; longer lists delegate to their shorter tail.
 def safeLast {α : Type} : List α → Option α
   | [] => none
   | [x] => some x
   | _ :: xs => safeLast xs
 
+-- Matching the list and index together makes both failure cases explicit.
 def safeNth {α : Type} : List α → Nat → Option α
   | [], _ => none
   | x :: _, 0 => some x
   | _ :: xs, n + 1 => safeNth xs n
 
+-- Only the constructor matters, so the contained value can be ignored.
 def isSome {α : Type} : Option α → Bool
   | none => false
   | some _ => true

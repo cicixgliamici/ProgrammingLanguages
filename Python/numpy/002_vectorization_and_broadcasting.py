@@ -1,4 +1,9 @@
-"""Replace element-by-element Python loops with NumPy array operations."""
+"""Replace element-by-element loops with vectorization and broadcasting.
+
+Vectorized expressions describe whole-array work. Broadcasting then aligns
+compatible shapes conceptually, usually without materializing repeated input
+values. The result array itself still occupies memory.
+"""
 
 from __future__ import annotations
 
@@ -7,6 +12,8 @@ import numpy as np
 
 def celsius_to_fahrenheit(celsius: np.ndarray) -> np.ndarray:
     """Apply one formula to every array element through vectorization."""
+    # NumPy overloads arithmetic operators so this scalar formula is applied to
+    # every element while preserving the input shape.
     return celsius * 9.0 / 5.0 + 32.0
 
 
@@ -14,6 +21,8 @@ def show_vectorization() -> None:
     """Perform arithmetic and conditional selection on complete arrays."""
     temperatures = np.array([-5.0, 0.0, 10.0, 20.0, 30.0])
 
+    # `np.where` selects element by element; it is not a Python `if` statement
+    # and therefore accepts an array of conditions.
     print("Celsius:", temperatures)
     print("Fahrenheit:", celsius_to_fahrenheit(temperatures))
     print("Absolute values:", np.abs(temperatures))
@@ -48,6 +57,8 @@ def show_shape_mismatch() -> None:
     valid_right_shape = (3,)
     invalid_right_shape = (2,)
 
+    # Compare dimensions from right to left. A pair is compatible if its sizes
+    # match or one size is 1; missing leading dimensions behave like size 1.
     print(f"{left_shape} and {valid_right_shape}: compatible")
     print(f"{left_shape} and {invalid_right_shape}: incompatible")
     print("Trailing dimensions must be equal, or one of them must be 1.")

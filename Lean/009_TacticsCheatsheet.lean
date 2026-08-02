@@ -76,4 +76,9 @@ example (h : False) : p := by
 - routine simplification: `simp`;
 - recursive data and recursive claim: `induction`;
 - alternatives stored in a value: `cases`.
+
+Exercises:
+1. Re-prove every example using a slightly different tactic or proof term.
+2. Add one original example for each tactic in this file.
+3. Build a personal reference file named `MyTactics.lean`.
 -/

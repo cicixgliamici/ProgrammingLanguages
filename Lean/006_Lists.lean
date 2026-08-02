@@ -38,12 +38,21 @@ def myMap {α β : Type} (f : α → β) : List α → List β
 #eval snoc [1, 2, 3] 4
 #eval myMap (fun x => x + 1) [1, 2, 3]
 
-/- Solved exercises -/
+/-
+Solved exercises
 
+Exercise 1: define `myAppend : List α → List α → List α`.
+Exercise 2: define `containsZero : List Nat → Bool`.
+Exercise 3: prove that `sumList [] = 0`.
+Exercise 4: prove that `myLength (snoc xs x) = myLength xs + 1`.
+-/
+
+-- Recursing on the first list preserves its order before the second list.
 def myAppend {α : Type} : List α → List α → List α
   | [], ys => ys
   | x :: xs, ys => x :: myAppend xs ys
 
+-- The Boolean disjunction stops with `true` as soon as a zero is found.
 def containsZero : List Nat → Bool
   | [] => false
   | x :: xs => x == 0 || containsZero xs

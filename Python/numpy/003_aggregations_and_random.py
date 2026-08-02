@@ -1,4 +1,8 @@
-"""Compute summaries along axes and generate reproducible random data."""
+"""Compute summaries along axes and generate reproducible random data.
+
+An aggregation reduces many values to fewer values. The `axis` argument names
+the dimension that disappears, while the remaining axes describe the output.
+"""
 
 from __future__ import annotations
 
@@ -15,6 +19,8 @@ def show_aggregations() -> None:
         ]
     )
 
+    # With shape (employees, days), axis 0 removes employees and produces one
+    # result per day; axis 1 removes days and produces one result per employee.
     print("Sales:\n", weekly_sales)
     print("Total:", weekly_sales.sum())
     print("Totals per employee (axis 1):", weekly_sales.sum(axis=1))
@@ -25,6 +31,8 @@ def show_aggregations() -> None:
 
 def describe(values: np.ndarray) -> dict[str, float]:
     """Return a small statistical summary using NumPy reductions."""
+    # Converting NumPy scalars to Python floats makes the returned dictionary
+    # easier to serialize and consume outside NumPy.
     return {
         "minimum": float(values.min()),
         "maximum": float(values.max()),
@@ -36,6 +44,8 @@ def describe(values: np.ndarray) -> dict[str, float]:
 
 def show_reproducible_random_data() -> None:
     """Use a local generator so tests and lessons produce repeatable output."""
+    # A local Generator avoids hidden global state. Reusing the same seed starts
+    # the same sequence, which is useful for lessons and automated tests.
     generator = np.random.default_rng(seed=42)
     measurements = generator.normal(loc=100.0, scale=15.0, size=10)
     sample_without_replacement = generator.choice(20, size=5, replace=False)
