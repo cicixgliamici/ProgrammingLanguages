@@ -37,6 +37,9 @@ typedef struct {
     int capacity;       // Current capacity of the array
 } Stack;
 
+// Declare queries before operations that use them to keep C17 type checking strict.
+bool isEmpty(Stack* stack);
+
 /**
  * Creates a new stack with initial capacity.
  * 
@@ -229,4 +232,4 @@ int main() {
     
     destroyStack(stack);
     return 0;
-} 
+}

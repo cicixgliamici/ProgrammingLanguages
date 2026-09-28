@@ -1,0 +1,99 @@
+name: Verify learning examples
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  c:
+    name: C
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure
+        run: cmake -S C -B build/c
+      - name: Compile
+        run: cmake --build build/c
+      - name: Test examples
+        run: ctest --test-dir build/c --output-on-failure
+
+  java:
+    name: Java
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: maven
+          cache-dependency-path: Java/pom.xml
+      - name: Compile and test
+        run: mvn --batch-mode --file Java/pom.xml verify
+
+  spring:
+    name: Spring Boot
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: maven
+          cache-dependency-path: Spring/ProductExample/pom.xml
+      - name: Compile and test
+        run: mvn --batch-mode --file Spring/ProductExample/pom.xml verify
+
+  scala:
+    name: Scala
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: sbt/setup-sbt@v1
+      - name: Compile
+        working-directory: Scala
+        run: sbt --batch compile
+
+  python:
+    name: Python
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run standard-library tests
+        run: python -m unittest discover -s Python/tests -v
+
+  lean:
+    name: Lean
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: leanprover/lean-action@v1
+        with:
+          build: false
+          test: false
+          lint: false
+      - name: Check standalone lessons
+        shell: bash
+        run: for lesson in Lean/*.lean; do lean "$lesson"; done
+
+  coq:
+    name: Coq
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Coq
+        run: sudo apt-get update && sudo apt-get install --yes coq
+      - name: Check standalone lessons
+        shell: bash
+        run: grep -v '^#' _CoqProject | xargs -n 1 coqc

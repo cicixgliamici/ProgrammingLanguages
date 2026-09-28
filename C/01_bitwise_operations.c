@@ -54,8 +54,8 @@ void demonstrateLogicalOperators() {
 void demonstrateBitwiseOperators() {
     printf("\n=== Bitwise Operators ===\n");
     
-    unsigned char a = 0b10101010;  // 170 in decimal
-    unsigned char b = 0b11110000;  // 240 in decimal
+    unsigned char a = 0xAA;  // Binary 10101010, 170 in decimal
+    unsigned char b = 0xF0;  // Binary 11110000, 240 in decimal
     
     printf("a = %d (binary: 10101010)\n", a);
     printf("b = %d (binary: 11110000)\n", b);
@@ -75,7 +75,7 @@ void demonstrateBitwiseOperators() {
 void demonstrateShiftOperators() {
     printf("\n=== Shift Operators ===\n");
     
-    unsigned char num = 0b00001010;  // 10 in decimal
+    unsigned char num = 0x0A;  // Binary 00001010, 10 in decimal
     
     printf("Original number: %d (binary: 00001010)\n", num);
     printf("Left shift by 2: %d (binary: 00101000)\n", num << 2);
@@ -91,8 +91,8 @@ void demonstrateShiftOperators() {
 void demonstrateCompoundOperations() {
     printf("\n=== Compound Bitwise Operations ===\n");
     
-    unsigned char a = 0b10101010;
-    unsigned char b = 0b11110000;
+    unsigned char a = 0xAA;
+    unsigned char b = 0xF0;
     
     // NAND: NOT (A AND B)
     unsigned char nand = ~(a & b);
@@ -204,7 +204,7 @@ void demonstrateCompoundAssignment() {
 void demonstrateBitManipulation() {
     printf("\n=== Bit Manipulation Techniques ===\n");
     
-    unsigned int num = 0b10101010;
+    unsigned int num = 0xAA;
     
     // 1. Isolating the rightmost set bit
     unsigned int rightmost = num & (-num);
@@ -246,8 +246,8 @@ void demonstrateBitManipulation() {
 void demonstrateAdvancedOperations() {
     printf("\n=== Advanced Bitwise Operations ===\n");
     
-    unsigned int a = 0b10101010;
-    unsigned int b = 0b11110000;
+    unsigned int a = 0xAA;
+    unsigned int b = 0xF0;
     
     // 1. Bit rotation
     unsigned int rotated = (a << 1) | (a >> 7);  // Rotate left by 1
@@ -263,7 +263,7 @@ void demonstrateAdvancedOperations() {
     
     // 3. Parity check
     unsigned int parity = 0;
-    a = 0b10101010;
+    a = 0xAA;
     while (a) {
         parity ^= a & 1;
         a >>= 1;
@@ -307,4 +307,4 @@ int main() {
     demonstrateAdvancedOperations();
     
     return 0;
-} 
+}

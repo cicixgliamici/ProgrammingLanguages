@@ -10,6 +10,9 @@ The repository is especially useful for:
 - studying small implementations of core concepts,
 - and building structured material for practice and interview preparation.
 
+The current implementation status and covered features are tracked in the
+[global learning progress index](./PROGRESS.md).
+
 ---
 
 ## Why this repository matters
@@ -55,6 +58,24 @@ A practical way to use it is:
 2. Re-implement the idea independently.
 3. Compare approaches across different languages.
 4. Use the repository as a revision and practice base rather than as a passive reference only.
+
+## Verify the repository
+
+Run all checks supported by the tools installed on the current machine:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\verify.ps1
+```
+
+The script compiles or checks C, Java, Spring Boot, Scala, Python, Lean, and
+Coq. Missing toolchains are reported as skipped, while a failed available check
+returns a non-zero exit code. Language-specific build files pin the relevant
+language or build-tool versions where practical.
+
+The workflow in `.github/workflows/verify.yml` runs the same responsibilities
+in isolated CI jobs. Keeping one job per ecosystem makes failures easy to
+locate and prevents an unavailable toolchain from hiding results for the other
+languages.
 
 ---
 

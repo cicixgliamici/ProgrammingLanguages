@@ -30,6 +30,11 @@ Thumbs.db
 *.log
 logs/ 
 
+# Local build and interpreter output
+/build/
+**/__pycache__/
+*.py[cod]
+
 # Coq / Rocq generated files
 *.vo
 *.vos

@@ -40,6 +40,9 @@ typedef struct {
     int capacity;       // Current capacity of the array
 } Queue;
 
+// Declare queries before operations that use them to keep C17 type checking strict.
+bool isEmpty(Queue* queue);
+
 /**
  * Creates a new queue with initial capacity.
  * 
@@ -251,4 +254,4 @@ int main() {
     
     destroyQueue(queue);
     return 0;
-} 
+}
