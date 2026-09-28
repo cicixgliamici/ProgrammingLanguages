@@ -120,5 +120,25 @@ class LinearRegressionTests(unittest.TestCase):
             self.lesson.train_linear_regression([], [])
 
 
+class ReliableFunctionsTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.lesson = load_lesson("009_reliable_functions.py")
+
+    def test_summary_and_scaling(self) -> None:
+        values = [10.0, 20.0, 30.0]
+        summary = self.lesson.summarize(values)
+        self.assertEqual(summary.count, 3)
+        self.assertEqual(summary.mean, 20.0)
+        self.assertEqual(self.lesson.min_max_scale(values), [0.0, 0.5, 1.0])
+        self.assertEqual(values, [10.0, 20.0, 30.0])
+
+    def test_invalid_values_are_rejected(self) -> None:
+        with self.assertRaises(ValueError):
+            self.lesson.summarize([])
+        with self.assertRaises(ValueError):
+            self.lesson.min_max_scale([2.0, 2.0])
+
+
 if __name__ == "__main__":
     unittest.main()

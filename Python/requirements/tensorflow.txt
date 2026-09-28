@@ -1,0 +1,2 @@
+# TensorFlow 2.21 supports Python 3.10-3.13; use the repository's Python 3.12 CI target.
+tensorflow==2.21.0

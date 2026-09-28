@@ -114,15 +114,15 @@ try {
     }
 
     if (Test-Tool "lake") {
-        Invoke-Check "Lean Lake project" { lake build }
+        Invoke-Check "Lean Lake project" { & "$PSScriptRoot/build-lean.ps1" }
     }
     else {
-        Add-SkippedCheck "Lean" "Lake is not installed; lean-toolchain pins the required version."
+        Add-SkippedCheck "Lean" "Lake is not installed; config/lean/lean-toolchain pins the required version."
     }
 
     if (Test-Tool "coqc") {
         Invoke-Check "Coq lessons" {
-            $coqFiles = Get-Content _CoqProject |
+            $coqFiles = Get-Content config/coq/_CoqProject |
                 Where-Object { $_ -and -not $_.StartsWith("#") -and -not $_.StartsWith("-") }
             foreach ($coqFile in $coqFiles) {
                 coqc -Q Coq LearningCoq $coqFile

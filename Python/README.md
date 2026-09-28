@@ -43,7 +43,23 @@ Install the pinned dependency for the implemented NumPy track with:
 python -m pip install -r .\Python\requirements\numpy.txt
 ```
 
-Roadmap-only sections do not yet have requirement files. Their dependencies
+Install the classical machine-learning lab with:
+
+```powershell
+python -m pip install -r .\Python\requirements\scikit-learn.txt
+```
+
+Install the executable pandas track with:
+
+```powershell
+python -m pip install -r .\Python\requirements\pandas.txt
+```
+
+Install Matplotlib with `requirements/matplotlib.txt`. TensorFlow and PyTorch
+use separate Python 3.12 environments because they are large frameworks with
+platform-specific compatibility requirements; follow their section READMEs.
+
+Other roadmap-only sections do not yet have requirement files. Their dependencies
 will be pinned when the first executable lesson is added, so an installation
 command never implies that unfinished material is supported.
 

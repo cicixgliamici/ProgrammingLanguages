@@ -71,14 +71,62 @@ jobs:
         with:
           python-version: "3.12"
           cache: pip
-          cache-dependency-path: Python/requirements/numpy.txt
+          cache-dependency-path: |
+            Python/requirements/numpy.txt
+            Python/requirements/pandas.txt
+            Python/requirements/scikit-learn.txt
+            Python/requirements/matplotlib.txt
       - name: Install pinned dependencies
-        run: python -m pip install --requirement Python/requirements/numpy.txt
-      - name: Run standard-library tests
+        run: >-
+          python -m pip install
+          --requirement Python/requirements/numpy.txt
+          --requirement Python/requirements/pandas.txt
+          --requirement Python/requirements/scikit-learn.txt
+          --requirement Python/requirements/matplotlib.txt
+      - name: Run Python tests
         run: python -m unittest discover -s Python/tests -v
       - name: Run NumPy lessons
         shell: bash
         run: for lesson in Python/numpy/*.py; do python "$lesson"; done
+      - name: Run Matplotlib lessons
+        shell: bash
+        run: for lesson in Python/matplotlib/*.py; do python "$lesson"; done
+
+  tensorflow:
+    name: TensorFlow
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: Python/requirements/tensorflow.txt
+      - name: Install pinned TensorFlow
+        run: python -m pip install --requirement Python/requirements/tensorflow.txt
+      - name: Run TensorFlow lessons and tests
+        run: |
+          python Python/tensorflow/000_tensors_and_gradients.py
+          python Python/tensorflow/001_keras_regression.py
+          python -m unittest discover -s Python/tests -p test_deep_learning.py -v
+
+  pytorch:
+    name: PyTorch CPU
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: Python/requirements/pytorch.txt
+      - name: Install pinned PyTorch CPU
+        run: python -m pip install --requirement Python/requirements/pytorch.txt
+      - name: Run PyTorch lessons and tests
+        run: |
+          python Python/pytorch/000_tensors_and_gradients.py
+          python Python/pytorch/001_training_loop.py
+          python -m unittest discover -s Python/tests -p test_deep_learning.py -v
 
   lean:
     name: Lean
@@ -87,6 +135,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: leanprover/lean-action@v1
         with:
+          lake-package-directory: config/lean
           build: true
           test: false
           lint: false
@@ -99,6 +148,6 @@ jobs:
       - name: Install Coq
         run: sudo apt-get update && sudo apt-get install --yes coq
       - name: Generate Makefile
-        run: coq_makefile -f _CoqProject -o CoqMakefile
+        run: mkdir -p build/coq && coq_makefile -f config/coq/_CoqProject -o build/coq/CoqMakefile
       - name: Compile project
-        run: make -f CoqMakefile
+        run: make -f build/coq/CoqMakefile

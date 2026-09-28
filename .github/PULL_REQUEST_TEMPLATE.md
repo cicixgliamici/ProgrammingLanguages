@@ -12,11 +12,11 @@
 
 - [ ] The affected examples compile or run.
 - [ ] Relevant automated tests pass.
-- [ ] The track README and `PROGRESS.md` are updated when coverage changed.
+- [ ] The public track README is updated when coverage changed.
 
 ## Quality checklist
 
-- [ ] The change follows `docs/EDITORIAL_GUIDE.md`.
+- [ ] The change follows the style rules in `CONTRIBUTING.md`.
 - [ ] Functions and variables have clear names.
 - [ ] Comments explain decisions or non-obvious behavior.
 - [ ] No generated files, credentials, or machine-specific paths are included.

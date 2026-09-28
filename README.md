@@ -41,11 +41,10 @@ the same problem can be studied through more than one paradigm.
 | Track | Current focus | Start here |
 | --- | --- | --- |
 | Spring Boot | A layered product-management REST example | [Spring Boot example](./Spring/ProductExample/README.md) |
-| Python Data & ML | NumPy plus roadmaps for the wider data ecosystem | [Python learning path](./Python/README.md) |
+| Python Data & ML | NumPy plus tested pandas and Scikit-Learn learning tracks | [Python learning path](./Python/README.md) |
 
-See [PROGRESS.md](./PROGRESS.md) for the exact material currently available and
-the gaps in each track. Planned content is explicitly distinguished from
-executable lessons.
+Each track README distinguishes executable lessons from planned material and
+documents its current prerequisites, learning objectives, and verification.
 
 ## How to study
 
@@ -96,8 +95,8 @@ toolchain targets are C17, Java 17, Scala 3, Python 3.12, Lean 4.19, and Coq 8.x
 - **Readable decisions:** comments explain why a choice was made, not merely
   what the syntax does.
 
-The complete authoring rules are in the
-[editorial guide](./docs/EDITORIAL_GUIDE.md).
+Repository-facing contribution rules are documented in
+[CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ## Contributing
 
@@ -106,11 +105,16 @@ are welcome. Before opening a pull request, read
 [CONTRIBUTING.md](./CONTRIBUTING.md) and the
 [Code of Conduct](./CODE_OF_CONDUCT.md).
 
-## Project status
+## Repository layout
 
-This is a growing reference, not a claim of exhaustive coverage. Stable,
-verified material and future directions are tracked in
-[PROGRESS.md](./PROGRESS.md).
+Language and framework directories contain the learning material. Reproducible
+build configuration that does not belong to one conventional project directory
+lives under [`config/`](./config/). Cross-project commands live under `scripts/`, and all
+generated output belongs under `build/` or a tool-specific ignored directory.
+
+Maintainer notes, working plans, and progress assessments belong under `local/`.
+That directory is intentionally ignored so internal context is never published
+with the learning repository.
 
 ## License
 

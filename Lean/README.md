@@ -177,15 +177,20 @@ in that file. Any `#eval` command will also print its result.
 
 The repository is a Lake package. Every lesson is built as an independent
 module so repeated teaching definitions in different lessons do not collide.
-Check the complete track from the repository root with:
+Check the complete track from the repository root with the wrapper:
 
 ```powershell
-lake build
-lake env lean .\Lean\Lesson005_Induction.lean
+powershell -ExecutionPolicy Bypass -File .\scripts\build-lean.ps1
 ```
 
-`lake build` checks every lesson incrementally. `lake env lean` invokes Lean in
-the pinned workspace environment when checking one file directly.
+The wrapper runs `lake build` from `config/lean`, where the Lake project and
+pinned toolchain live. To check one file directly in that environment:
+
+```powershell
+Push-Location .\config\lean
+lake env lean ..\..\Lean\Lesson005_Induction.lean
+Pop-Location
+```
 
 ## Elan and reproducible toolchains
 
@@ -218,7 +223,8 @@ Lake is Lean's standard build tool and package manager. It configures builds,
 tracks dependencies, builds libraries and executables, and supports project
 workflows such as tests and linters.
 
-A typical package contains:
+A typical package contains the following files. This repository keeps them
+together under `config/lean/` to keep its multi-language root uncluttered:
 
 - `lean-toolchain`, selecting the Lean version;
 - `lakefile.toml` or `lakefile.lean`, declaring targets and dependencies;
@@ -376,7 +382,7 @@ types, inspect the indices as well as the outer type name.
 
 ### Toolchain error
 
-Use `elan show` and inspect the project's `lean-toolchain` file. A missing or
+Use `elan show` and inspect `config/lean/lean-toolchain`. A missing or
 incompatible toolchain prevents Lean from checking otherwise valid code.
 
 ## Style principles used in this directory

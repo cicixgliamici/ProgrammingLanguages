@@ -48,14 +48,23 @@ Per progetti composti da più moduli si usano un file `_CoqProject` e strumenti
 come `coq_makefile` oppure Dune. Le opzioni `-Q` e `-R` associano directory
 fisiche a namespace logici.
 
-Questo repository usa `_CoqProject` per associare `Coq/` al namespace logico
+Questo repository usa `config/coq/_CoqProject` per associare `Coq/` al namespace logico
 `LearningCoq` e per definire l'ordine riproducibile dei file. Su sistemi con
 `make`, dalla radice del repository:
 
 ```bash
-coq_makefile -f _CoqProject -o CoqMakefile
-make -f CoqMakefile
+mkdir -p build/coq
+coq_makefile -f config/coq/_CoqProject -o build/coq/CoqMakefile
+make -f build/coq/CoqMakefile
 ```
+
+Su Windows lo stesso processo è disponibile tramite:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\build-coq.ps1
+```
+
+I Makefile generati restano sotto `build/coq/` e non vengono versionati.
 
 La documentazione ufficiale conferma che `coqc` compila file `.v` in `.vo`,
 mentre `coqtop` è l'interfaccia interattiva:

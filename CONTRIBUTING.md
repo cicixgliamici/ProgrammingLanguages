@@ -6,12 +6,11 @@ add meaningful verification, or extend a learning path in a focused way.
 
 ## Before starting
 
-1. Read the relevant track README and [PROGRESS.md](./PROGRESS.md).
+1. Read the relevant track README and its implemented lesson index.
 2. Check existing issues and pull requests to avoid duplicate work.
 3. Open an issue before proposing a new language, framework, or large
    structural change.
-4. Follow the [editorial guide](./docs/EDITORIAL_GUIDE.md) and
-   [Code of Conduct](./CODE_OF_CONDUCT.md).
+4. Follow the style rules below and the [Code of Conduct](./CODE_OF_CONDUCT.md).
 
 Small corrections and focused test improvements do not require an issue first.
 
@@ -25,7 +24,7 @@ A new lesson should normally include:
 - comments that explain non-obvious decisions;
 - at least one exercise, test, or observable result;
 - documentation of any new dependency or command;
-- an update to the relevant index and `PROGRESS.md`.
+- an update to the relevant public track index.
 
 Avoid adding isolated snippets, generated output, copied tutorials, or broad
 files that cover many unrelated concepts.

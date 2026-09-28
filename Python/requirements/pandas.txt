@@ -1,0 +1,2 @@
+# Pin the executable tabular-data track for reproducible study results.
+pandas==3.0.2

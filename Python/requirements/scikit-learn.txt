@@ -1,0 +1,4 @@
+# Pin the executable classical machine-learning track for reproducible results.
+scikit-learn==1.8.0
+# Pandas provides labelled mixed-type columns for the preprocessing lesson.
+pandas==3.0.2

@@ -1,0 +1,2 @@
+# Matplotlib 3.10 supports Python 3.10+ and is used with a non-interactive backend.
+matplotlib==3.10.8

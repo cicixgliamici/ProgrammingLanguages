@@ -34,6 +34,8 @@ logs/
 /build/
 **/__pycache__/
 *.py[cod]
+/local/
+**/.lake/
 
 # Coq / Rocq generated files
 *.vo
@@ -42,9 +44,4 @@ logs/
 *.glob
 .*.aux
 .lia.cache
-/CoqMakefile
-/CoqMakefile.conf
-/.CoqMakefile.d
-
-# Lean / Lake build output
-/.lake/
+# Lean / Lake and Coq build output is written below /build or a local .lake.
