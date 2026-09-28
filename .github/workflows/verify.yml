@@ -58,9 +58,9 @@ jobs:
           distribution: temurin
           java-version: "17"
       - uses: sbt/setup-sbt@v1
-      - name: Compile
+      - name: Compile and test
         working-directory: Scala
-        run: sbt --batch compile
+        run: sbt --batch test
 
   python:
     name: Python
@@ -70,8 +70,15 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+          cache: pip
+          cache-dependency-path: Python/requirements/numpy.txt
+      - name: Install pinned dependencies
+        run: python -m pip install --requirement Python/requirements/numpy.txt
       - name: Run standard-library tests
         run: python -m unittest discover -s Python/tests -v
+      - name: Run NumPy lessons
+        shell: bash
+        run: for lesson in Python/numpy/*.py; do python "$lesson"; done
 
   lean:
     name: Lean
@@ -80,12 +87,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: leanprover/lean-action@v1
         with:
-          build: false
+          build: true
           test: false
           lint: false
-      - name: Check standalone lessons
-        shell: bash
-        run: for lesson in Lean/*.lean; do lean "$lesson"; done
 
   coq:
     name: Coq
@@ -94,6 +98,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install Coq
         run: sudo apt-get update && sudo apt-get install --yes coq
-      - name: Check standalone lessons
-        shell: bash
-        run: grep -v '^#' _CoqProject | xargs -n 1 coqc
+      - name: Generate Makefile
+        run: coq_makefile -f _CoqProject -o CoqMakefile
+      - name: Compile project
+        run: make -f CoqMakefile

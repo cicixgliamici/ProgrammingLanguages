@@ -57,6 +57,11 @@ The project includes comprehensive tests that cover:
 - Complex operations
 - Performance optimizations
 
+The implementation lives in
+`src/main/java/dev/learning/collections` and its JUnit suite lives in
+`src/test/java/dev/learning/collections`. Run it from the repository root with
+`mvn --file Java/pom.xml test`.
+
 ## Usage Example
 
 ```java
@@ -103,4 +108,4 @@ Potential enhancements:
 - Reverse traversal
 - Sorting capabilities
 - Merge operations
-- Circular list support 
+- Circular list support

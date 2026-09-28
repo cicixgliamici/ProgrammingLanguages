@@ -1,7 +1,8 @@
 # The lessons are standalone, so this file lists their deterministic build order.
-Coq/000_BasicDefinitions.v
-Coq/001_Propositions.v
-Coq/002_RewritingAndSimplification.v
-Coq/003_InductiveTypes.v
-Coq/004_Lists.v
-Coq/005_Induction.v
+-Q Coq LearningCoq
+Coq/Lesson000_BasicDefinitions.v
+Coq/Lesson001_Propositions.v
+Coq/Lesson002_RewritingAndSimplification.v
+Coq/Lesson003_InductiveTypes.v
+Coq/Lesson004_Lists.v
+Coq/Lesson005_Induction.v

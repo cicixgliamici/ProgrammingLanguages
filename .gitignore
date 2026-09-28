@@ -42,3 +42,9 @@ logs/
 *.glob
 .*.aux
 .lia.cache
+/CoqMakefile
+/CoqMakefile.conf
+/.CoqMakefile.d
+
+# Lean / Lake build output
+/.lake/

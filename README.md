@@ -1,114 +1,117 @@
 # Programming Languages Reference & Practice
 
-This repository collects notes, examples, and small implementations related to programming languages and core programming concepts.
+[![Verify learning examples](https://github.com/cicixgliamici/ProgrammingLanguages/actions/workflows/verify.yml/badge.svg)](https://github.com/cicixgliamici/ProgrammingLanguages/actions/workflows/verify.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+[![Contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)](./CONTRIBUTING.md)
 
-Its goal is to be a **growing reference and practice space** rather than a finished encyclopedic resource.
+A curated, executable learning repository for studying programming languages,
+programming paradigms, formal methods, and selected development ecosystems.
 
-The repository is especially useful for:
-- revising language fundamentals,
-- comparing idioms across languages,
-- studying small implementations of core concepts,
-- and building structured material for practice and interview preparation.
+The project favors clear explanations, small examples, deliberate practice, and
+reproducible verification over encyclopedic coverage. It is useful for guided
+study, revision, interview preparation, and comparing how different languages
+express the same ideas.
 
-The current implementation status and covered features are tracked in the
-[global learning progress index](./PROGRESS.md).
+## Choose a learning track
 
----
+### Language foundations
 
-## Why this repository matters
+| Track | Current focus | Start here |
+| --- | --- | --- |
+| C | Memory, data structures, and algorithms | [C learning path](./C/README.md) |
+| Java | Syntax, OOP, arrays, exceptions, and testing | [Java learning path](./Java/README.md) |
+| Python | Core language, numerical computing, and applications | [Python learning path](./Python/README.md) |
+| Scala | Functional and object-oriented programming with Scala 3 | [Scala learning path](./Scala/README.md) |
 
-A lot of language-learning repositories try to cover everything at once.
+### Programming paradigms
 
-This one is intentionally more modest and more honest in scope: it is a repository that grows over time through curated examples, notes, and small exercises.
+The language tracks introduce imperative, object-oriented, and functional
+programming in context. Cross-language comparison lessons are planned so that
+the same problem can be studied through more than one paradigm.
 
-The value of the project lies in:
-- **clarity over breadth**,
-- **practice-oriented structure**,
-- and the possibility of comparing different languages through concrete material.
+### Formal methods
 
----
+| Track | Current focus | Start here |
+| --- | --- | --- |
+| Lean 4 | Types, propositions, induction, structures, and verified programs | [Lean learning path](./Lean/README.md) |
+| Coq / Rocq | Definitions, inductive types, tactics, and proofs | [Coq learning path](./Coq/README.md) |
 
-## Repository structure
+### Ecosystems and applications
 
-The repository is organized by language, with each language area potentially containing:
-- syntax and basic concepts
-- data structures
-- algorithmic patterns
-- small exercises or mini-projects
-- notes on style, best practices, and recurring ideas
+| Track | Current focus | Start here |
+| --- | --- | --- |
+| Spring Boot | A layered product-management REST example | [Spring Boot example](./Spring/ProductExample/README.md) |
+| Python Data & ML | NumPy plus roadmaps for the wider data ecosystem | [Python learning path](./Python/README.md) |
 
-### Current visible language areas
-- [C Programming](./C/)
-- [Java](./Java/)
-- [Scala](./Scala/)
-- [Python](./Python/)
-- [Lean4](./Lean/)
-- [Coq / Rocq](./Coq/)
-- [SpringBoot](./Spring/)
+See [PROGRESS.md](./PROGRESS.md) for the exact material currently available and
+the gaps in each track. Planned content is explicitly distinguished from
+executable lessons.
 
-As the repository evolves, more language sections can be added in the same spirit.
+## How to study
 
----
+1. Select one track and read its prerequisites and lesson order.
+2. Predict what an example will do before executing it.
+3. Reimplement the central idea without looking at the solution.
+4. Complete or extend the exercises.
+5. Run the relevant checks after every change.
+6. Compare the concept with another language or paradigm.
 
-## How to use this repository
-
-A practical way to use it is:
-
-1. Read the notes or examples for a language area.
-2. Re-implement the idea independently.
-3. Compare approaches across different languages.
-4. Use the repository as a revision and practice base rather than as a passive reference only.
+The examples are reference material, but the repository is designed for active
+practice rather than passive reading.
 
 ## Verify the repository
 
-Run all checks supported by the tools installed on the current machine:
+On Windows, run every check supported by the toolchains installed locally:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\verify.ps1
 ```
 
-The script compiles or checks C, Java, Spring Boot, Scala, Python, Lean, and
-Coq. Missing toolchains are reported as skipped, while a failed available check
-returns a non-zero exit code. Language-specific build files pin the relevant
-language or build-tool versions where practical.
+The script reports missing toolchains as skipped and returns a non-zero exit
+code when an available check fails. The
+[GitHub Actions workflow](./.github/workflows/verify.yml) verifies each
+ecosystem independently on every push and pull request.
 
-The workflow in `.github/workflows/verify.yml` runs the same responsibilities
-in isolated CI jobs. Keeping one job per ecosystem makes failures easy to
-locate and prevents an unavailable toolchain from hiding results for the other
-languages.
+Before publishing or tagging a release, require every local toolchain instead
+of accepting skipped checks:
 
----
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\verify.ps1 -RequireAll
+```
 
-## Positioning
+Strict verification exits with code `2` when any supported toolchain or
+required dependency is unavailable.
 
-This repository is best understood as:
-- a **study and practice repository**,
-- a **curated personal reference**,
-- and a place to organize programming-language material in a structured way.
+Individual setup and execution commands are documented in each track. The main
+toolchain targets are C17, Java 17, Scala 3, Python 3.12, Lean 4.19, and Coq 8.x.
 
-It is not meant to claim exhaustive coverage of every language or topic.
+## Repository principles
 
----
+- **Clarity over breadth:** a focused lesson is preferable to an unexplained
+  collection of features.
+- **Executable knowledge:** examples should compile or run when practical.
+- **Honest status:** roadmaps and incomplete work are labelled as such.
+- **Progressive learning:** files and concepts follow an intentional order.
+- **Meaningful verification:** tests and builds are part of the material.
+- **Readable decisions:** comments explain why a choice was made, not merely
+  what the syntax does.
 
-## Future directions
-
-Possible future extensions include:
-- more language sections
-- additional algorithmic patterns
-- notes on paradigms and language design
-- comparisons between imperative, object-oriented, and functional approaches
-- more mini-projects and guided exercises
-
-These are directions for growth, not claims about what is already fully implemented.
-
----
+The complete authoring rules are in the
+[editorial guide](./docs/EDITORIAL_GUIDE.md).
 
 ## Contributing
 
-Contributions, improvements, and corrections are welcome.
+Corrections, clearer explanations, exercises, tests, and focused new lessons
+are welcome. Before opening a pull request, read
+[CONTRIBUTING.md](./CONTRIBUTING.md) and the
+[Code of Conduct](./CODE_OF_CONDUCT.md).
 
----
+## Project status
+
+This is a growing reference, not a claim of exhaustive coverage. Stable,
+verified material and future directions are tracked in
+[PROGRESS.md](./PROGRESS.md).
 
 ## License
 
-MIT
+Released under the [MIT License](./LICENSE).

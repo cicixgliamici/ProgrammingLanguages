@@ -24,22 +24,11 @@
     </dependencies>
 
     <build>
-        <!-- The existing lesson layout stays readable without a disruptive move. -->
-        <sourceDirectory>${project.basedir}</sourceDirectory>
-        <testSourceDirectory>${project.basedir}</testSourceDirectory>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.13.0</version>
-                <configuration>
-                    <excludes>
-                        <exclude>**/*Test.java</exclude>
-                    </excludes>
-                    <testIncludes>
-                        <testInclude>**/*Test.java</testInclude>
-                    </testIncludes>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

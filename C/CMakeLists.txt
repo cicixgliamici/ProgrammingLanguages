@@ -34,3 +34,17 @@ foreach(lesson_source IN LISTS LESSON_SOURCES)
     # Running each lesson catches crashes in addition to compilation errors.
     add_test(NAME "run_${lesson_name}" COMMAND "${lesson_name}")
 endforeach()
+
+# Focused tests exercise reusable behavior instead of only checking that a
+# complete lesson runs without crashing.
+add_executable(test_binary_search tests/test_binary_search.c)
+add_executable(test_gregorian_calendar tests/test_gregorian_calendar.c)
+
+foreach(test_target IN ITEMS test_binary_search test_gregorian_calendar)
+    if(MSVC)
+        target_compile_options("${test_target}" PRIVATE /W4)
+    else()
+        target_compile_options("${test_target}" PRIVATE -Wall -Wextra -Wpedantic)
+    endif()
+    add_test(NAME "${test_target}" COMMAND "${test_target}")
+endforeach()

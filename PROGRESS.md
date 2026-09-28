@@ -7,21 +7,23 @@ is added.
 
 ## Status legend
 
-- **Implemented**: source code or a complete lesson is present.
-- **In progress**: useful material exists, but the section is not yet a complete learning path.
-- **Planned**: the directory contains only an introduction or roadmap.
+- **Planned**: a roadmap exists, but no executable lesson is available.
+- **Draft**: useful material exists, but the learning path is incomplete.
+- **Usable**: the section has instructions, executable material, and exercises.
+- **Verified**: the material is automatically built or tested in CI.
+- **Complete**: the defined learning objectives and final project are present.
 
 ## Progress overview
 
 | Area | Status | Implemented structures and features | Main gaps |
 | --- | --- | --- | --- |
-| [C](./C/) | In progress | Basic program structure; bitwise operations; manual memory management; linked list; queue; stack; binary search; binary search tree; introductory Exercism solutions; CMake build and CTest smoke tests | Section README, focused unit tests, ownership/error-handling conventions |
-| [Java](./Java/) | In progress | Syntax and primitive types; strings; arrays; math utilities; array algorithms; exceptions; generic doubly linked list; calculator; JUnit examples; Maven build | Package structure, collection interfaces, broader test automation |
-| [Scala](./Scala/) | In progress | Basic syntax; values and functions; functional programming; strings; collections; classes and traits; sbt build | Section README, tests, pattern matching, algebraic data types, concurrency |
-| [Python](./Python/) | In progress | Core syntax and collections; iterators and generators; OOP, protocols, and dataclasses; exceptions, files, and JSON; arrays and hashing; token-bucket rate limiter; linear regression; password hashing and login protection; NumPy foundations through linear algebra and data preparation; standard-library unit tests | Packaging; executable lessons for pandas, Matplotlib, scikit-learn, TensorFlow, and PyTorch |
-| [Lean 4](./Lean/) | Implemented | Typed functions; propositions and tactics; rewriting; pattern matching; structures; recursion and induction; lists and trees; `Option`; products and sums; typeclasses; dependent vectors; verified expression optimization; pinned toolchain and CI verification | Lake module structure, larger multi-module examples |
-| [Coq / Rocq](./Coq/) | In progress | Definitions and computation; propositions; equality rewriting; inductive types; lists; structural induction; deterministic project file and CI verification | More advanced proofs and extraction |
-| [Spring Boot](./Spring/ProductExample/) | In progress | Layered CRUD example with application, controller, service, repository, and JPA entity; Maven configuration; service unit tests | README/API examples, validation, exception mapping, database configuration and migrations |
+| [C](./C/) | Verified | Basic program structure; bitwise operations; manual memory management; linked list; queue; stack; binary search; binary search tree; introductory Exercism solutions; CMake build; smoke and focused CTest tests | More data-structure unit tests, ownership/error-handling conventions |
+| [Java](./Java/) | Verified | Syntax and primitive types; strings; arrays; math utilities; array algorithms; exceptions; generic doubly linked list; calculator; conventional Maven packages; JUnit examples | Collection interfaces and broader test automation |
+| [Scala](./Scala/) | Verified | Basic syntax; values and functions; functional programming; strings; collections; classes and traits; conventional sbt layout; MUnit tests | Pattern matching, algebraic data types, concurrency, broader tests |
+| [Python](./Python/) | Verified | Core syntax and collections; iterators and generators; OOP, protocols, and dataclasses; exceptions, files, and JSON; arrays and hashing; token-bucket rate limiter; linear regression; password hashing and login protection; pinned NumPy track; standard-library tests and CI lesson execution | Packaging; focused NumPy unit tests; executable lessons for pandas, Matplotlib, scikit-learn, TensorFlow, and PyTorch |
+| [Lean 4](./Lean/) | Verified | Typed functions; propositions and tactics; rewriting; pattern matching; structures; recursion and induction; lists and trees; `Option`; products and sums; typeclasses; dependent vectors; verified expression optimization; pinned Lake build and CI verification | Larger multi-module examples and final project criteria |
+| [Coq / Rocq](./Coq/) | Verified | Definitions and computation; propositions; equality rewriting; inductive types; lists; structural induction; namespaced `_CoqProject` and generated Makefile build | More advanced proofs, exercises, and extraction |
+| [Spring Boot](./Spring/ProductExample/) | Verified | Layered CRUD example with application, controller, service, repository, and JPA entity; Maven configuration; service unit tests; API and architecture guide | Validation, exception mapping, controller tests, database configuration and migrations |
 
 ## Detailed index
 
@@ -44,24 +46,23 @@ is added.
 | Material | Topic |
 | --- | --- |
 | `00_Introduction.md` | Language overview and foundational notes |
-| `HelloWorld.java`, `PrimitiveTypes.java` | Program structure and primitive values |
-| `StringOperations.java`, `MathFunctions.java` | Standard string and numerical operations |
-| `ArrayOperations.java`, `ArrayAlgorithms.java` | Array manipulation and algorithms |
-| `Calculator/` | Arithmetic operations, custom exceptions, and JUnit tests |
-| `DoublyLinkedList/` | Generic nodes, bidirectional links, list operations, and JUnit tests |
+| `src/main/java/dev/learning/basics/` | Program structure, primitive values, strings, math, arrays, and algorithms |
+| `src/main/java/dev/learning/calculator/` | Arithmetic operations and custom exceptions |
+| `src/main/java/dev/learning/collections/` | Generic nodes and bidirectional list operations |
+| `src/test/java/` | JUnit tests for reusable behavior and invariants |
 
 ### Scala
 
-The numbered examples currently progress from basic syntax to functional
-programming, string processing, collections, and object-oriented modelling with
-classes and traits.
+The numbered examples in `src/main/scala` progress from basic syntax to
+functional programming, string processing, collections, and object-oriented
+modelling with classes and traits. MUnit tests live in `src/test/scala`.
 
 ### Python
 
 | Section | Status | Coverage |
 | --- | --- | --- |
-| [`standard_library`](./Python/standard_library/) | Implemented | Nine progressive topics, including system-design, ML, and security sketches |
-| [`numpy`](./Python/numpy/) | Implemented | Arrays, dtypes, indexing, views/copies, broadcasting, reductions, random data, linear algebra, reshaping, missing data, sorting, and searching |
+| [`standard_library`](./Python/standard_library/) | Verified | Nine progressive topics, including system-design, ML, and security sketches |
+| [`numpy`](./Python/numpy/) | Verified | Arrays, dtypes, indexing, views/copies, broadcasting, reductions, random data, linear algebra, reshaping, missing data, sorting, and searching |
 | [`pandas`](./Python/pandas/) | Planned | README roadmap only |
 | [`matplotlib`](./Python/matplotlib/) | Planned | README roadmap only |
 | [`scikit_learn`](./Python/scikit_learn/) | Planned | README roadmap only |
@@ -87,8 +88,8 @@ proofs.
 
 `HTTP controller -> service interface -> service implementation -> repository -> entity`
 
-The example uses Maven and Spring Data JPA. It is currently an implementation
-sample rather than a documented, tested application.
+The example uses Maven and Spring Data JPA. Its architecture, API, limitations,
+tests, and extension exercises are documented in the section README.
 
 ## Updating this index
 

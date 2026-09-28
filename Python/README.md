@@ -37,6 +37,16 @@ python -m pip install --upgrade pip
 Install only the package needed by the section currently being studied. Do not
 commit `.venv`; environments are machine-specific.
 
+Install the pinned dependency for the implemented NumPy track with:
+
+```powershell
+python -m pip install -r .\Python\requirements\numpy.txt
+```
+
+Roadmap-only sections do not yet have requirement files. Their dependencies
+will be pinned when the first executable lesson is added, so an installation
+command never implies that unfinished material is supported.
+
 Run a standard-library lesson from the repository root with:
 
 ```powershell

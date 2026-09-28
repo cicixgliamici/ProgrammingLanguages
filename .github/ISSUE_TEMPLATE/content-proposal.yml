@@ -1,0 +1,53 @@
+name: Learning content proposal
+description: Propose a new lesson, exercise, comparison, or track improvement.
+title: "[Content]: "
+labels:
+  - enhancement
+body:
+  - type: textarea
+    id: objective
+    attributes:
+      label: Learning objective
+      description: What should a reader be able to understand or do afterward?
+    validations:
+      required: true
+  - type: dropdown
+    id: contribution
+    attributes:
+      label: Contribution type
+      options:
+        - Improve an existing lesson
+        - Add an exercise or test
+        - Add a lesson to an existing track
+        - Add a cross-language comparison
+        - Propose a new track
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Proposed scope
+      description: Describe prerequisites, examples, exercises, and files that would change.
+    validations:
+      required: true
+  - type: textarea
+    id: verification
+    attributes:
+      label: Verification
+      description: How can readers and CI verify that the material works?
+    validations:
+      required: true
+  - type: textarea
+    id: sources
+    attributes:
+      label: Authoritative references
+      description: Link official documentation or specifications supporting the material.
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: I read the contributing and editorial guides.
+          required: true
+        - label: I checked that this content is not already present or planned.
+          required: true

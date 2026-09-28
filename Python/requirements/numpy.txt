@@ -1,0 +1,2 @@
+# Pin the executable numerical-computing track for reproducible study results.
+numpy==2.2.6

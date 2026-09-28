@@ -1,81 +1,40 @@
-# Java Calculator Project
+# Java Calculator
 
-A simple calculator implementation in Java that demonstrates:
-- Basic mathematical operations
-- Exception handling
-- Unit testing with JUnit 5
-- Best practices in Java development
+This example demonstrates arithmetic operations, a domain-specific unchecked
+exception, and unit testing with JUnit 5.
 
 ## Features
 
-The calculator supports the following operations:
-- Addition
-- Subtraction
-- Multiplication
-- Division
-- Power calculation
+- Addition, subtraction, multiplication, division, and exponentiation.
+- Explicit failures for division by zero and non-finite results.
+- Tests for normal operations, boundary conditions, and exceptions.
 
-## Error Handling
+## Project structure
 
-The calculator includes robust error handling for:
-- Division by zero
-- Overflow conditions
-- Invalid mathematical operations
-- General calculation errors
+```text
+src/main/java/dev/learning/calculator/
+|-- Calculator.java
+`-- CalculatorException.java
 
-## Testing
-
-The project includes comprehensive unit tests that demonstrate:
-- Basic operation testing
-- Edge case handling
-- Exception testing
-- Multiple operation testing
-
-## Project Structure
-
-```
-Calculator/
-├── Calculator.java           # Main calculator implementation
-├── CalculatorException.java  # Custom exception class
-├── CalculatorTest.java      # JUnit test suite
-└── README.md                # This file
+src/test/java/dev/learning/calculator/
+`-- CalculatorTest.java
 ```
 
-## Running the Tests
+The source and test directories follow Maven conventions. The package boundary
+keeps the example independent from the introductory language lessons.
 
-To run the tests, you need:
-1. Java Development Kit (JDK) 8 or higher
-2. JUnit 5
+## Run the tests
 
-You can run the tests using:
-- Your favorite IDE (Eclipse, IntelliJ IDEA, etc.)
-- Maven: `mvn test`
-- Gradle: `gradle test`
+From the repository root:
 
-## Best Practices Demonstrated
+```powershell
+mvn --file Java/pom.xml test
+```
 
-1. **Exception Handling**
-   - Custom exception class
-   - Specific error messages
-   - Proper exception chaining
+## Study exercises
 
-2. **Testing**
-   - Comprehensive test coverage
-   - Clear test names and descriptions
-   - Testing of edge cases
-   - Exception testing
-
-3. **Code Quality**
-   - Clear documentation
-   - Consistent code style
-   - Input validation
-   - Result validation
-
-## Future Improvements
-
-Potential areas for enhancement:
-- Add more mathematical operations
-- Implement a command-line interface
-- Add a graphical user interface
-- Support for complex numbers
-- Add performance benchmarks 
+1. Add parameterized tests for a table of arithmetic cases.
+2. Decide how `NaN` inputs should behave and encode the decision in tests.
+3. Add one operation without catching exceptions that the operation cannot
+   meaningfully handle.
+4. Compare the current unchecked exception with a checked-exception API.

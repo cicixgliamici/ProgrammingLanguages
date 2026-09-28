@@ -77,26 +77,26 @@ select its required Lean toolchain automatically.
 
 | File | Main topic | Key ideas |
 | --- | --- | --- |
-| `000_BasicDefs.lean` | Basic definitions | Types, functions, evaluation, local bindings |
-| `001_Propositions.lean` | Propositions | Implication, conjunction, disjunction, negation |
-| `002_RewritingAndSimp.lean` | Equality reasoning | `rw`, `simp`, definitional equality |
-| `003_PatternMatching.lean` | Pattern matching | Constructors, exhaustive cases, recursion |
-| `004_Structures.lean` | Structures | Records, projections, immutable updates |
-| `005_Induction.lean` | Natural-number induction | Base cases, inductive steps, hypotheses |
-| `006_Lists.lean` | Lists | Structural recursion, map, append, length |
-| `007_LogicExercises1.lean` | Logic exercises | Proof construction and case analysis |
-| `007a_Solved.lean` | Alternative solutions | Longer tactic proofs with visible steps |
-| `008_CustomInductiveTypes.lean` | Custom data | Enumerations, options, recursive trees |
-| `009_TacticsCheatsheet.lean` | Tactic reference | Common tactics and when to use them |
-| `010_OptionAndErrorHandling.lean` | Safe partial functions | `Option`, mapping, binding, explicit failure |
-| `011_ProductSumTypes.lean` | Products and sums | Pairs, alternatives, eliminators |
-| `012_MoreLists.lean` | List processing | Filter, take, drop, zip, folds |
-| `013_ListProofs.lean` | List proofs | Helper lemmas and structural induction |
-| `014_Trees.lean` | Binary trees | Traversals, mapping, size, height |
-| `015_TreeProofs.lean` | Tree proofs | Invariants preserved by recursive functions |
-| `016_TypeclassesAndGenericCode.lean` | Typeclasses | Instances, capability constraints, generic APIs |
-| `017_DependentVectors.lean` | Dependent types | Length-indexed lists and safe indexing with `Fin` |
-| `018_VerifiedExpressionOptimizer.lean` | Verification project | Syntax, semantics, optimization, correctness |
+| `Lesson000_BasicDefs.lean` | Basic definitions | Types, functions, evaluation, local bindings |
+| `Lesson001_Propositions.lean` | Propositions | Implication, conjunction, disjunction, negation |
+| `Lesson002_RewritingAndSimp.lean` | Equality reasoning | `rw`, `simp`, definitional equality |
+| `Lesson003_PatternMatching.lean` | Pattern matching | Constructors, exhaustive cases, recursion |
+| `Lesson004_Structures.lean` | Structures | Records, projections, immutable updates |
+| `Lesson005_Induction.lean` | Natural-number induction | Base cases, inductive steps, hypotheses |
+| `Lesson006_Lists.lean` | Lists | Structural recursion, map, append, length |
+| `Lesson007_LogicExercises1.lean` | Logic exercises | Proof construction and case analysis |
+| `Lesson007a_Solved.lean` | Alternative solutions | Longer tactic proofs with visible steps |
+| `Lesson008_CustomInductiveTypes.lean` | Custom data | Enumerations, options, recursive trees |
+| `Lesson009_TacticsCheatsheet.lean` | Tactic reference | Common tactics and when to use them |
+| `Lesson010_OptionAndErrorHandling.lean` | Safe partial functions | `Option`, mapping, binding, explicit failure |
+| `Lesson011_ProductSumTypes.lean` | Products and sums | Pairs, alternatives, eliminators |
+| `Lesson012_MoreLists.lean` | List processing | Filter, take, drop, zip, folds |
+| `Lesson013_ListProofs.lean` | List proofs | Helper lemmas and structural induction |
+| `Lesson014_Trees.lean` | Binary trees | Traversals, mapping, size, height |
+| `Lesson015_TreeProofs.lean` | Tree proofs | Invariants preserved by recursive functions |
+| `Lesson016_TypeclassesAndGenericCode.lean` | Typeclasses | Instances, capability constraints, generic APIs |
+| `Lesson017_DependentVectors.lean` | Dependent types | Length-indexed lists and safe indexing with `Fin` |
+| `Lesson018_VerifiedExpressionOptimizer.lean` | Verification project | Syntax, semantics, optimization, correctness |
 
 ## Suggested study path
 
@@ -163,29 +163,29 @@ of a function.
 From the repository root, a standalone lesson can be checked with:
 
 ```powershell
-lean .\Lean\005_Induction.lean
+lake env lean .\Lean\Lesson005_Induction.lean
 ```
 
 On macOS or Linux, the equivalent command is:
 
 ```bash
-lean ./Lean/005_Induction.lean
+lake env lean ./Lean/Lesson005_Induction.lean
 ```
 
 If the command exits without an error, Lean accepted every definition and proof
 in that file. Any `#eval` command will also print its result.
 
-This directory currently consists of standalone lessons and does not require a
-Lake package. If the material is later converted into modules with imports and
-external dependencies, use a Lake workspace and run:
+The repository is a Lake package. Every lesson is built as an independent
+module so repeated teaching definitions in different lessons do not collide.
+Check the complete track from the repository root with:
 
 ```powershell
 lake build
-lake lean .\Path\To\Lesson.lean
+lake env lean .\Lean\Lesson005_Induction.lean
 ```
 
-`lake lean` builds the file's imports and then invokes Lean in the configured
-workspace environment.
+`lake build` checks every lesson incrementally. `lake env lean` invokes Lean in
+the pinned workspace environment when checking one file directly.
 
 ## Elan and reproducible toolchains
 
@@ -328,7 +328,7 @@ API designer choose which invalid states should be rejected before execution.
 
 ## Final mini-project
 
-`018_VerifiedExpressionOptimizer.lean` connects the earlier topics in one small
+`Lesson018_VerifiedExpressionOptimizer.lean` connects the earlier topics in one small
 verification project:
 
 1. `Expr` defines the syntax of a tiny arithmetic language.

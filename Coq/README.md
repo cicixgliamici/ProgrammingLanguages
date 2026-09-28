@@ -36,7 +36,7 @@ Con una distribuzione Coq 8.x, un singolo file si controlla dalla radice del
 repository con:
 
 ```powershell
-coqc .\Coq\000_BasicDefinitions.v
+coqc -Q Coq LearningCoq .\Coq\Lesson000_BasicDefinitions.v
 ```
 
 `coqc` controlla il sorgente `.v` e produce un oggetto compilato `.vo`.
@@ -47,6 +47,15 @@ più recenti gli equivalenti sono esposti anche attraverso comandi `rocq`, come
 Per progetti composti da più moduli si usano un file `_CoqProject` e strumenti
 come `coq_makefile` oppure Dune. Le opzioni `-Q` e `-R` associano directory
 fisiche a namespace logici.
+
+Questo repository usa `_CoqProject` per associare `Coq/` al namespace logico
+`LearningCoq` e per definire l'ordine riproducibile dei file. Su sistemi con
+`make`, dalla radice del repository:
+
+```bash
+coq_makefile -f _CoqProject -o CoqMakefile
+make -f CoqMakefile
+```
 
 La documentazione ufficiale conferma che `coqc` compila file `.v` in `.vo`,
 mentre `coqtop` è l'interfaccia interattiva:
@@ -60,12 +69,12 @@ lentamente nella prova anziché eseguire subito tutto il file.
 
 ## Ordine di studio
 
-1. `000_BasicDefinitions.v`: definizioni, tipi, `Check` e `Compute`.
-2. `001_Propositions.v`: implicazioni, congiunzioni e disgiunzioni.
-3. `002_RewritingAndSimplification.v`: uguaglianze, `rewrite` e `simpl`.
-4. `003_InductiveTypes.v`: costruttori, `match` e `destruct`.
-5. `004_Lists.v`: ricorsione e induzione strutturale sulle liste.
-6. `005_Induction.v`: funzioni ricorsive e prove sui naturali.
+1. `Lesson000_BasicDefinitions.v`: definizioni, tipi, `Check` e `Compute`.
+2. `Lesson001_Propositions.v`: implicazioni, congiunzioni e disgiunzioni.
+3. `Lesson002_RewritingAndSimplification.v`: uguaglianze, `rewrite` e `simpl`.
+4. `Lesson003_InductiveTypes.v`: costruttori, `match` e `destruct`.
+5. `Lesson004_Lists.v`: ricorsione e induzione strutturale sulle liste.
+6. `Lesson005_Induction.v`: funzioni ricorsive e prove sui naturali.
 
 ## Tattiche iniziali
 

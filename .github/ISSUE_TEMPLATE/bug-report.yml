@@ -1,0 +1,61 @@
+name: Bug report
+description: Report incorrect code, documentation, or verification behavior.
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: Thank you for helping keep the learning material accurate.
+  - type: dropdown
+    id: track
+    attributes:
+      label: Track
+      description: Which part of the repository is affected?
+      options:
+        - C
+        - Java
+        - Python
+        - Scala
+        - Lean 4
+        - Coq / Rocq
+        - Spring Boot
+        - Repository infrastructure or documentation
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: Explain what is incorrect and identify the relevant file or lesson.
+      placeholder: The example says or does...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: Explain the result or wording you expected and why.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Reproduction steps
+      description: Include the command, input, and complete error when applicable.
+      render: shell
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: Include the operating system and relevant toolchain version.
+      placeholder: Windows 11, Java 17.0.12, Maven 3.9.9
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: I searched for an existing issue about this problem.
+          required: true
+        - label: I did not include credentials or other private information.
+          required: true

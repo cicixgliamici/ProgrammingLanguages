@@ -40,7 +40,7 @@ isolated from the system Python installation:
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install --upgrade pip
-python -m pip install numpy
+python -m pip install -r .\Python\requirements\numpy.txt
 ```
 
 On macOS or Linux, activate the environment with:
@@ -48,7 +48,7 @@ On macOS or Linux, activate the environment with:
 ```bash
 source .venv/bin/activate
 python -m pip install --upgrade pip
-python -m pip install numpy
+python -m pip install -r ./Python/requirements/numpy.txt
 ```
 
 Confirm the installed version with:

@@ -6,7 +6,7 @@ lazy val root = project
   .in(file("."))
   .settings(
     name := "scala-language-examples",
-    // Lessons intentionally remain in this flat directory for reading in order.
-    Compile / unmanagedSourceDirectories := Seq(baseDirectory.value),
-    Compile / scalacOptions ++= Seq("-deprecation", "-feature", "-unchecked")
+    Compile / scalacOptions ++= Seq("-deprecation", "-feature", "-unchecked"),
+    libraryDependencies += "org.scalameta" %% "munit" % "1.0.3" % Test,
+    testFrameworks += new TestFramework("munit.Framework")
   )
